@@ -1,23 +1,17 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Route, Switch, Link } from 'react-router-dom';
 import './App.css';
+import Remindrs from './components/remindrs';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Did you update?
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Isaac Van Doren</h1>
+      <Switch>
+        <Route path="/remindrs">
+          <Remindrs></Remindrs>
+        </Route>
+      </Switch>
     </div>
   );
 }
