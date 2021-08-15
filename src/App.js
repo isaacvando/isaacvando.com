@@ -1,13 +1,16 @@
 import React from 'react';
-import { Route, Switch, Link } from 'react-router-dom';
+import { Route, Switch, Link, Redirect } from 'react-router-dom';
 import './App.css';
-import Remindrs from './components/remindrs';
+import Home from './components/Home'
+import Remindrs from './components/Remindrs';
 
 function App() {
   return (
     <div className="App">
-      <h1>Isaac Van Doren</h1>
       <Switch>
+        <Route exact path="/">
+          <Home></Home>
+        </Route>
         <Route path="/remindrs">
           <Remindrs></Remindrs>
         </Route>
