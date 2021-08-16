@@ -8,3 +8,10 @@
   /* color: #fff;
   background-color: #000; */
 }
+
+.Container {
+  text-align: left;
+  width: 80%;
+  margin: auto;
+}
+
