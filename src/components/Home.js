@@ -5,6 +5,7 @@ const Home = () => {
     <>
       <h1>Isaac Van Doren</h1>
       <hr className="Separator"></hr>
+			<p>Work in progress</p>
     </>
   );
 };
