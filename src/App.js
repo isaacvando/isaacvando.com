@@ -4,6 +4,7 @@ import './App.css';
 import Home from './components/Home'
 import PrivacyPolicy from './components/PrivacyPolicy';
 import Remindrs from './components/Remindrs';
+import Shopping from './components/Shopping';
 import Support from './components/Support';
 
 function App() {
@@ -22,6 +23,12 @@ function App() {
         <Route exact path="/remindrs/support">
           <Support></Support>
         </Route>
+				<Route exact path="/shopping">
+					<Shopping></Shopping>
+				</Route>
+				<Route exact path="/logo3.png">
+				
+				</Route>
       </Switch>
     </div>
   );
