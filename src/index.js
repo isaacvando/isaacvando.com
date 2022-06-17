@@ -7,8 +7,8 @@ import { HashRouter } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 
 ReactDOM.render(
-	// <Auth0Provider domain="dev-5ilep2g1.us.auth0.com" clientId="UbwHTAclsvnG1fDTMnu8GNrBVu2jGhdD" redirectUri="https://isaacvando.com/#/shopping">
-	<Auth0Provider domain="dev-5ilep2g1.us.auth0.com" clientId="UbwHTAclsvnG1fDTMnu8GNrBVu2jGhdD" redirectUri="localhost:3000/#/shopping">
+	<Auth0Provider domain="dev-5ilep2g1.us.auth0.com" clientId="UbwHTAclsvnG1fDTMnu8GNrBVu2jGhdD" redirectUri="https://isaacvando.com/#/shopping">
+	{/* <Auth0Provider domain="dev-5ilep2g1.us.auth0.com" clientId="UbwHTAclsvnG1fDTMnu8GNrBVu2jGhdD" redirectUri="localhost:3000/#/shopping"> */}
   <React.StrictMode>
     <HashRouter>
       <App />
