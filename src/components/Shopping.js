@@ -18,6 +18,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
+
+// condense usages
 onAuthStateChanged(auth, user => {
 	console.log("You are logged in as ", user);
 	if (user != null)
@@ -41,11 +43,31 @@ onAuthStateChanged(auth, user => {
 });
 
 const Shopping = () => {
+	const [name, setName] = useState(null);
+	// useEffect(() => {
+	// 	// if(auth.currentUser != null) {
+	// 	// 	setName(auth.currentUser.displayName);
+	// 	// 	console.log("yup");
+	// 	// }
+
+	// 	setName(onAuthStateChanged(auth, user => {
+	// 		console.log("yup");
+	// 		if (user != null)
+	// 			return user.displayName;
+	// 		else
+	// 			return null;
+	// 	}));
+	// },[]);
+
+	onAuthStateChanged(auth, user => {
+		setName(user.displayName);
+	});
+
 
 	return (
 		<>
 		<h1>Shopping</h1>
-		{/* { name != null && <p>Hello {name}!</p>} */}
+		{name != null && <p>Hello {name}!</p>}
 		<Button variant="outlined" onClick={() => logIn()}>Log in</Button>
 		<Button variant="outlined" onClick={() => signOut(auth)}>Log out</Button>
 		<hr className="Separator"></hr>
@@ -54,7 +76,7 @@ const Shopping = () => {
 };
 
 const logIn = async () => {
-	var result = await signInWithPopup(auth, new GoogleAuthProvider)
+	var result = await signInWithPopup(auth, new GoogleAuthProvider())
 	return result;
 }
 
