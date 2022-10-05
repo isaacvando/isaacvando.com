@@ -1,0 +1,57 @@
+/* https://css-tricks.com/snippets/css/complete-guide-grid/ */
+
+
+.container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 2fr 1fr;
+    grid-template-rows: 150px 300px 600px 300px 100px;
+    grid-template-areas:
+        ". header header ."
+        ". left1 right1 ."
+        ". left2 right2 ."
+        ". left3 right3 ."
+        "footer footer footer footer";
+
+    place-items: center;
+}
+.header {
+    grid-area: header;
+    font-size: 50px;
+}
+.fp {
+    grid-area: left1;
+}
+.remindrsImage {
+    grid-area: left2;
+    object-fit: cover;
+    height: 100%;
+}
+.remindrs {
+    grid-area: right2;
+}
+.footer {
+    grid-area: footer;
+}
+
+
+
+
+
+
+
+/* .name {
+    font-size: 12em;
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}
+.character:hover {
+    color: red
+}
+
+.space {
+    width: .28em
+} */
+/* .name:hover {
+    
+} */

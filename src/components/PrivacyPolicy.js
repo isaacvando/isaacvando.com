@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
           No information is collected or shared.</p>
         <h3>What permissions does remindrs request?</h3>
         <p>remindrs requests access to send push notifications.</p>
-        <p>~Isaac Van Doren, devloper of remindrs</p>
+        <p>~Isaac Van Doren, developer of remindrs</p>
       </div>
     </>
   );

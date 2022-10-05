@@ -1,17 +1,17 @@
-.Separator {
+.separator {
   border-color: #999;
   width: 95%;
 }
 
 .App {
-  text-align: center;
+  /* text-align: center; */
   /* color: #fff;
   background-color: #000; */
 }
 
 .Container {
-  text-align: left;
+  /* text-align: left;
   width: 80%;
-  margin: auto;
+  margin: auto; */
 }
 
