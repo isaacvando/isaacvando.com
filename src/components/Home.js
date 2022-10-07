@@ -1,6 +1,4 @@
 import { React } from 'react';
-// import 'katex/dist/katex.min.css';
-// import { InlineMath } from 'react-katex';
 import './Home.css';
 
 import Phone from '../assets/remindrsMock.png';
@@ -25,18 +23,15 @@ const Home = () => {
           </a>
         </div>
       </div>
-
       <div className='about'>
         <p> <strong Style={"font-size: 25px"}>Hello! I'm Isaac.</strong> <br></br> <br></br> I love math, computer science, philosophy, and learning in general.
-          I've especially been enjoying <a href="https://haskell.org" target="blank">Haskell</a> for its high level of abstraction, novelty, and that it forces me to stretch my mind. </p>
-        
+          I've especially been enjoying <a href="https://haskell.org" target="blank">Haskell</a> for its high level of abstraction, novelty, and that it forces me to stretch my mind. 
+        </p>
       </div>
       <img className='isaacImage' src={Isaac} alt="I got married!"/>
-
       <p className='fpSig'>I'm leading a special interest group on functional programming. It's been a blast getting to share my excitement about all the cool things Haskell can do with other people. 
         Plus I get to take my knowledge to the next level by figuring out how to explain concepts to other people. You can check out my notes on <a href="https://github.com/isaacvando/FunctionalProgrammingSIG" target="blank">GitHub</a>.</p>
       <img className='fpSigImage' src={Haskell} alt="Haskell logo"></img>
-
       <img className='remindrsImage' src={Phone} alt='remindrs mobile app'/>
       <div className='remindrs'>
         <p>
@@ -51,7 +46,6 @@ const Home = () => {
           </a>
         </div>
       </div>
-
       <div className='footer'>
         <a href='https://github.com/isaacvando' target='blank'>Developed by
         <img className='footerImage' src={GitHub} alt="Isaac Van Doren on GitHub"></img>Isaac Van Doren</a>
@@ -61,62 +55,3 @@ const Home = () => {
 }
 
 export default Home;
-
-
-
-
-
-
-
-
-// *** Header idea ***
-// const Home = () => {
-//   const [mouseOn, setMouseOn] = useState('');
-//   const Character = (letter) => {
-//     return (
-//     <div className='character' onMouseOver={() => setMouseOn(letter)} onMouseOut={() => setMouseOn('')}>
-//       {/* {mouseOn === 'I' ? <div>X</div> : <div>I</div>} */}
-//       foo
-//     </div>
-//     )
-//   };
-
-//   return (
-//    <div className='name'>
-//     <div className='character' onMouseOver={() => setMouseOn('I')} onMouseOut={() => setMouseOn('')}>
-//       {mouseOn === 'I' ? <InlineMath math='\mathbb{I}' /> : <InlineMath>{String.raw `\text{I}`}</InlineMath>}
-//     </div>
-//     <div id='S' className='character' onMouseOver={() => setMouseOn('S')} onMouseOut={() => setMouseOn('')}>
-//       {mouseOn === 'S' ? <InlineMath>S_n</InlineMath> : <InlineMath>{String.raw `\text{S}`}</InlineMath>}
-//     </div>
-//     <div className='character' onMouseOver={() => setMouseOn('A1')} onMouseOut={() => setMouseOn('')}>
-//       {mouseOn === 'A1' ? <InlineMath>\alpha</InlineMath> : <InlineMath>{String.raw `\text{A}`}</InlineMath>}
-//     </div>
-//     <div className='character' onMouseOver={() => setMouseOn('A2')} onMouseOut={() => setMouseOn('')}>
-//       {mouseOn === 'A2' ? <InlineMath math='\mathbb{A}' /> : <InlineMath>{String.raw `\text{A}`}</InlineMath>}
-//     </div>
-//     <div className='character' onMouseOver={() => setMouseOn('C')} onMouseOut={() => setMouseOn('')}>
-//       {mouseOn === 'C' ? <InlineMath math='\mathbb{C}' /> : <InlineMath>{String.raw `\text{C}`}</InlineMath>}
-//     </div>
-
-
-
-//     {/* <div className='character'>S</div>
-//     <div className='character'>A</div>
-//     <div className='character'>A</div>
-//     <div className='character'>C</div>
-//     <div className='space'></div>
-//     <div className='character'>V</div>
-//     <div className='character'>A</div>
-//     <div className='character'>N</div>
-//     <div className='space'></div>
-//     <div className='character'>D</div>
-//     <div className='character'>O</div>
-//     <div className='character'>R</div>
-//     <div className='character'>E</div>
-//     <div className='character'>N</div> */}
-//    </div>
-//   );
-// };
-
-// export default Home;
