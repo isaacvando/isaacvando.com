@@ -8,7 +8,9 @@ a:hover {
     /* text-decoration: underline; */
     color: white;
 }
-
+p {
+    font-size: 19px;
+}
 .container {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
@@ -51,8 +53,8 @@ a:hover {
 .isaacImage {
     grid-area: right0;
     object-fit: cover;
-    height: 80%;
-    border-radius: 15%;
+    height: 90%;
+    border-radius: 12%;
 }
 .fpSig {
     grid-area: right1;
@@ -88,6 +90,7 @@ a:hover {
     height: 20px;
     padding-left: 10px;
     padding-right: 10px;
+    margin-bottom: -4px;
 }
 
 

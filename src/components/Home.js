@@ -27,7 +27,7 @@ const Home = () => {
       </div>
 
       <div className='about'>
-        <p> <strong>Hello! I'm Isaac.</strong> <br></br> I love math, computer science, philosophy, and learning in general.
+        <p> <strong Style={"font-size: 25px"}>Hello! I'm Isaac.</strong> <br></br> <br></br> I love math, computer science, philosophy, and learning in general.
           I've especially been enjoying <a href="https://haskell.org" target="blank">Haskell</a> for its high level of abstraction, novelty, and that it forces me to stretch my mind. </p>
         
       </div>
@@ -54,7 +54,7 @@ const Home = () => {
 
       <div className='footer'>
         <a href='https://github.com/isaacvando' target='blank'>Developed by
-        <img className='footerImage' src={GitHub} alt="Isaac Van Doren on GitHub"></img> Isaac Van Doren</a>
+        <img className='footerImage' src={GitHub} alt="Isaac Van Doren on GitHub"></img>Isaac Van Doren</a>
       </div>
     </div>
   );
