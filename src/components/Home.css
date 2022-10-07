@@ -12,16 +12,15 @@ a:hover {
 .container {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
-    grid-template-rows: 200px 400px 300px 600px 300px 100px;
+    grid-template-rows: 200px 400px 400px 600px 100px;
     grid-template-areas:
         ". header header ."
         ". left0 right0 ."
         ". left1 right1 ."
         ". left2 right2 ."
-        ". left3 right3 ."
         "footer footer footer footer";
-
     place-items: center;
+    row-gap: 200px;
 }
 .header {
     grid-area: header;
@@ -77,7 +76,7 @@ a:hover {
     justify-content: center;
 }
 .AppStoreBadge {
-    height: 41px;
+    height: 40px;
 }
 .PlayStoreBadge {
     height: 60px;
@@ -85,6 +84,12 @@ a:hover {
 .footer {
     grid-area: footer;
 }
+.footerImage{
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 
 
 

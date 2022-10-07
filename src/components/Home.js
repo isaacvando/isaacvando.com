@@ -53,8 +53,8 @@ const Home = () => {
       </div>
 
       <div className='footer'>
-        <a href='https://github.com/isaacvando' target='blank'>Developed by Isaac Van Doren</a>
-        <p>Built with React</p>
+        <a href='https://github.com/isaacvando' target='blank'>Developed by
+        <img className='footerImage' src={GitHub} alt="Isaac Van Doren on GitHub"></img> Isaac Van Doren</a>
       </div>
     </div>
   );
