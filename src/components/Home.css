@@ -1,12 +1,21 @@
 /* https://css-tricks.com/snippets/css/complete-guide-grid/ */
 
+a {
+    text-decoration: none;
+    color: #999;
+}
+a:hover {
+    /* text-decoration: underline; */
+    color: white;
+}
 
 .container {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
-    grid-template-rows: 150px 300px 600px 300px 100px;
+    grid-template-rows: 200px 400px 300px 600px 300px 100px;
     grid-template-areas:
         ". header header ."
+        ". left0 right0 ."
         ". left1 right1 ."
         ". left2 right2 ."
         ". left3 right3 ."
@@ -16,18 +25,62 @@
 }
 .header {
     grid-area: header;
-    font-size: 50px;
+    font-size: 60px;
+    margin-bottom: 25px;
+    /* border:1px solid white; */
 }
-.fp {
+.name {
+    margin: 0px;
+    padding: 0px; 
+}
+.mark {
+    height: 30px;
+    padding-left: 3px;
+    padding-right: 3px;
+    vertical-align: top;
+}
+.marks {
+    display: flex;
+    justify-content: center;
+}
+.marks > a {
+    height: 30px;
+}
+.about {
+    grid-area: left0;
+}
+.isaacImage {
+    grid-area: right0;
+    object-fit: cover;
+    height: 80%;
+    border-radius: 15%;
+}
+.fpSig {
+    grid-area: right1;
+}
+.fpSigImage {
     grid-area: left1;
+    height: 80%;
 }
 .remindrsImage {
-    grid-area: left2;
+    grid-area: right2;
     object-fit: cover;
     height: 100%;
 }
 .remindrs {
-    grid-area: right2;
+    grid-area: left2;
+}
+.badges {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+.AppStoreBadge {
+    height: 41px;
+}
+.PlayStoreBadge {
+    height: 60px;
 }
 .footer {
     grid-area: footer;
