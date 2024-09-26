@@ -2,4 +2,7 @@
 
 name=$1
 
-cat $name.md | cmark | ./highlight.js > $name.html
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+cat $name.md | ./highlight.js > $name.html

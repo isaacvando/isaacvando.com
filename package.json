@@ -3,6 +3,7 @@
   "dependencies": {
     "highlight.js": "^11.10.0",
     "highlightjs-roc": "^0.2.0",
-    "jsdom": "^25.0.1"
+    "jsdom": "^25.0.1",
+    "marked": "^14.1.2"
   }
 }

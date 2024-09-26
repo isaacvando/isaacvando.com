@@ -2,25 +2,23 @@
 
 import hljs from "highlight.js";
 import hljsRoc from "highlightjs-roc";
-import { createInterface } from "readline";
+import { marked } from "marked";
 import { JSDOM } from "jsdom";
 
 hljs.registerLanguage("roc", hljsRoc);
 
-const rl = createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false,
-});
-
+// Read input from stdin
 let input = "";
+process.stdin.setEncoding("utf8");
 
-rl.on("line", (line) => {
-  input += line + "\n";
+process.stdin.on("data", (chunk) => {
+  input += chunk;
 });
 
-rl.on("close", () => {
-  const dom = new JSDOM(input);
+process.stdin.on("end", () => {
+  const html = marked(input);
+
+  const dom = new JSDOM(html, { contentType: "text/html;charset=utf-8" });
   const document = dom.window.document;
 
   const codeBlocks = document.querySelectorAll("pre code.language-roc");
