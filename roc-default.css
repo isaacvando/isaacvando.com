@@ -1,0 +1,87 @@
+:root {
+    --background: #fafafa;
+    --text: #383a42;
+    --comment: #a0a1a7;
+    --keyword: #a626a4;
+    --string: #008000;
+    --subst: #808080;
+    --number: #986801;
+    --type: #024cfa;
+    --symbol: #808080;
+    --title: #4078f2;
+    --built-in: #c18401;
+    --interpolation: #000000;
+}
+
+.dark-mode {
+    --background: #000000;
+    --text: #ffffff;
+    --comment: #5c6370;
+    --keyword: #c678dd;
+    --string: #6cd15c;
+    --subst: #9ca0a4;
+    --number: #d19a66;
+    --type: #4279fc;
+    --symbol: #9ca0a4;
+    --title: #61afef;
+    --built-in: #e6c07b;
+    --interpolation: #ffffff;
+}
+
+.hljs {
+    color: var(--text);
+    background: var(--background);
+}
+
+.hljs-comment {
+    color: var(--comment);
+    font-style: italic;
+}
+
+.hljs-keyword {
+    color: var(--keyword);
+}
+
+.hljs-string {
+    color: var(--string);
+}
+
+.hljs-subst {
+    color: var(--subst);
+}
+
+.hljs-number {
+    color: var(--number);
+}
+
+.hljs-type {
+    color: var(--type);
+}
+
+.hljs-symbol {
+    color: var(--symbol);
+}
+
+.hljs-title {
+    color: var(--title);
+}
+
+.hljs-built_in {
+    color: var(--built-in);
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}
+
+.hljs-interpolation-content {
+    color: var(--interpolation);
+}
+
+.hljs-char {
+    color: var(--string);
+}
