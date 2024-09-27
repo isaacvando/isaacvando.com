@@ -279,7 +279,7 @@ Oops! 'swap' expected 2 arguments, but there weren't enough on the stack.
             </p>
             <pre><code class="language-roc">color <span class="hljs-symbol">:</span> <span class="hljs-type">Bool</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-symbol">[</span><span class="hljs-type">Red</span>, <span class="hljs-type">Blue</span><span class="hljs-symbol">]</span>
 color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&gt;</span>
-	<span class="hljs-keyword">if</span> condition <span class="hljs-keyword">then</span> <span class="hljs-type">Red</span> <span class="hljs-keyword">else</span> <span class="hljs-type">Blue</span>
+    <span class="hljs-keyword">if</span> condition <span class="hljs-keyword">then</span> <span class="hljs-type">Red</span> <span class="hljs-keyword">else</span> <span class="hljs-type">Blue</span>
 </code></pre>
             <p>
                 If I add an operation to the interpreter that can encounter a
@@ -295,7 +295,7 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
                 I omitted the input type to <code>handleError</code> with an
                 underscore.
             </p>
-            <pre><code>handleError : _ -&gt; Str
+            <pre><code class="language-roc">handleError <span class="hljs-symbol">:</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 </code></pre>
             <p>
                 This saves us from having to write out the whole error union and
@@ -304,7 +304,7 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
                 renaming a tag or updating its payload I don't have to update
                 any annotations.
             </p>
-            <pre><code>step : Stack, Op -&gt; Result Stack _
+            <pre><code class="language-roc">step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">_</span>
 </code></pre>
             <p>
                 Roc's combination of deferred errors with <code>?</code>,
@@ -359,10 +359,12 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
             <details>
                 <summary>Full solution</summary>
                 <pre><code class="language-roc"><span class="hljs-keyword">module</span> <span class="hljs-symbol">[</span>evaluate<span class="hljs-symbol">]</span>
+
 <span class="hljs-comment"># Types</span>
 <span class="hljs-type">Defs</span> <span class="hljs-symbol">:</span> <span class="hljs-type">Dict</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Str</span><span class="hljs-symbol">)</span>
 <span class="hljs-type">Stack</span> <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">I16</span>
 <span class="hljs-type">Op</span> <span class="hljs-symbol">:</span> <span class="hljs-symbol">[</span><span class="hljs-type">Dup</span>, <span class="hljs-type">Drop</span>, <span class="hljs-type">Swap</span>, <span class="hljs-type">Over</span>, <span class="hljs-type">Add</span>, <span class="hljs-type">Subtract</span>, <span class="hljs-type">Multiply</span>, <span class="hljs-type">Divide</span>, <span class="hljs-type">Number</span> <span class="hljs-type">I16</span><span class="hljs-symbol">]</span>
+
 <span class="hljs-comment"># Evaluation</span>
 evaluate <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-type">Str</span>
 evaluate = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">-&gt;</span>
@@ -370,6 +372,7 @@ evaluate = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">-
         operations = parse<span class="hljs-symbol">?</span> program
         interpret operations
     <span class="hljs-type">Result</span>.mapErr result handleError
+
 interpret <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">_</span>
 interpret = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">-&gt;</span>
     help = <span class="hljs-symbol">\</span>ops, stack <span class="hljs-symbol">-&gt;</span>
@@ -380,6 +383,7 @@ interpret = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">
                     <span class="hljs-type">Ok</span> newStack <span class="hljs-symbol">-&gt;</span> help rest newStack
                     <span class="hljs-type">Err</span> error <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">EvaluationError</span> <span class="hljs-symbol">{</span> error, stack, op, ops <span class="hljs-symbol">}</span> <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Err</span>
     help program <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span>
+
 step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">_</span>
 step = <span class="hljs-symbol">\</span>stack, op <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-keyword">when</span> op <span class="hljs-keyword">is</span>
@@ -428,6 +432,7 @@ step = <span class="hljs-symbol">\</span>stack, op <span class="hljs-symbol">-&g
                 <span class="hljs-symbol">[</span><span class="hljs-symbol">..</span> <span class="hljs-keyword">as</span> rest, x, y<span class="hljs-symbol">]</span> <span class="hljs-symbol">-&gt;</span>
                     <span class="hljs-type">List</span>.append rest <span class="hljs-symbol">(</span>x <span class="hljs-symbol">/</span><span class="hljs-symbol">/</span> y<span class="hljs-symbol">)</span> <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Ok</span>
                 <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Err</span> <span class="hljs-symbol">(</span><span class="hljs-type">Arity</span> 2<span class="hljs-symbol">)</span>
+
 <span class="hljs-comment"># Parsing</span>
 parse <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Op</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">_</span>
 parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</span>
@@ -439,6 +444,7 @@ parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</s
             <span class="hljs-symbol">|&gt;</span> flattenDefs defs
             <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">List</span>.mapTry toOp
         <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Ok</span> <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span> <span class="hljs-comment"># We'll let the empty program return the empty stack</span>
+
 parseDefs <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Defs</span> <span class="hljs-symbol">_</span>
 parseDefs = <span class="hljs-symbol">\</span>lines <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-type">List</span>.walkTry lines <span class="hljs-symbol">(</span><span class="hljs-type">Dict</span>.empty <span class="hljs-symbol">{</span><span class="hljs-symbol">}</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">\</span>defs, line <span class="hljs-symbol">-&gt;</span>
@@ -447,6 +453,7 @@ parseDefs = <span class="hljs-symbol">\</span>lines <span class="hljs-symbol">-&
                 ops = parseDef<span class="hljs-symbol">?</span> tokens defs
                 <span class="hljs-type">Dict</span>.insert defs name ops <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Ok</span>
             <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Err</span> <span class="hljs-symbol">(</span><span class="hljs-type">UnableToParseDef</span> line<span class="hljs-symbol">)</span>
+
 parseDef <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">Str</span>, <span class="hljs-type">Defs</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Str</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">_</span>
 parseDef = <span class="hljs-symbol">\</span>tokens, defs <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-type">List</span>.walkTry tokens <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span> <span class="hljs-symbol">\</span>ops, token <span class="hljs-symbol">-&gt;</span>
@@ -454,12 +461,14 @@ parseDef = <span class="hljs-symbol">\</span>tokens, defs <span class="hljs-symb
             <span class="hljs-type">Ok</span> body <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">List</span>.concat ops body <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Ok</span>
             <span class="hljs-symbol">_</span> <span class="hljs-keyword">if</span> toOp token <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Result</span>.isOk <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">List</span>.append ops token <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Ok</span>
             <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Err</span> <span class="hljs-symbol">(</span><span class="hljs-type">UnknownName</span> token<span class="hljs-symbol">)</span>
+
 flattenDefs <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">Str</span>, <span class="hljs-type">Defs</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">List</span> <span class="hljs-type">Str</span>
 flattenDefs = <span class="hljs-symbol">\</span>tokens, defs <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-type">List</span>.joinMap tokens <span class="hljs-symbol">\</span>token <span class="hljs-symbol">-&gt;</span>
         <span class="hljs-keyword">when</span> <span class="hljs-type">Dict</span>.get defs token <span class="hljs-keyword">is</span>
             <span class="hljs-type">Ok</span> body <span class="hljs-symbol">-&gt;</span> body
             <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-symbol">[</span>token<span class="hljs-symbol">]</span>
+
 toOp <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Op</span> <span class="hljs-symbol">_</span>
 toOp = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-keyword">when</span> str <span class="hljs-keyword">is</span>
@@ -475,6 +484,7 @@ toOp = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</sp
             <span class="hljs-keyword">when</span> <span class="hljs-type">Str</span>.toI16 str <span class="hljs-keyword">is</span>
                 <span class="hljs-type">Ok</span> num <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Ok</span> <span class="hljs-symbol">(</span><span class="hljs-type">Number</span> num<span class="hljs-symbol">)</span>
                 <span class="hljs-type">Err</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Err</span> <span class="hljs-symbol">(</span><span class="hljs-type">UnknownName</span> str<span class="hljs-symbol">)</span>
+
 <span class="hljs-comment"># Display</span>
 handleError <span class="hljs-symbol">:</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 handleError = <span class="hljs-symbol">\</span>err <span class="hljs-symbol">-&gt;</span>
@@ -502,6 +512,7 @@ handleError = <span class="hljs-symbol">\</span>err <span class="hljs-symbol">-&
                     Sorry, division by zero is not allowed.
                     <span class="hljs-subst">$(<span class="hljs-interpolation-content"><span class="language-roc">showExecution stack ops</span></span>)</span>
                     "</span><span class="hljs-string">""</span>
+
 showExecution <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">List</span> <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 showExecution = <span class="hljs-symbol">\</span>stack, ops <span class="hljs-symbol">-&gt;</span>
     stackStr =
@@ -511,6 +522,7 @@ showExecution = <span class="hljs-symbol">\</span>stack, ops <span class="hljs-s
         <span class="hljs-type">List</span>.map ops opToStr
         <span class="hljs-symbol">|&gt;</span> <span class="hljs-type">Str</span>.joinWith <span class="hljs-string">" "</span>
     <span class="hljs-string">"<span class="hljs-subst">$(<span class="hljs-interpolation-content"><span class="language-roc">stackStr</span></span>)</span> | <span class="hljs-subst">$(<span class="hljs-interpolation-content"><span class="language-roc">opsStr</span></span>)</span>"</span>
+
 opToStr <span class="hljs-symbol">:</span> <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 opToStr = <span class="hljs-symbol">\</span>op <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-keyword">when</span> op <span class="hljs-keyword">is</span>
@@ -523,6 +535,7 @@ opToStr = <span class="hljs-symbol">\</span>op <span class="hljs-symbol">-&gt;</
         <span class="hljs-type">Multiply</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-string">"*"</span>
         <span class="hljs-type">Divide</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-string">"/"</span>
         <span class="hljs-type">Number</span> num <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Num</span>.toStr num
+
 toLower <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 toLower = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</span>
     result =
