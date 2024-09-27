@@ -542,8 +542,13 @@ toLower = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;<
         </div>
         <footer>
             <p>
-                <a href="/">home</a>
+                <a href="/">home</a> | &copy; <span id="date"></span> Isaac Van
+                Doren
             </p>
+            <script>
+                document.getElementById("date").innerHTML =
+                    new Date().getFullYear();
+            </script>
         </footer>
     </body>
 </html>
