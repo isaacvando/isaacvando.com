@@ -1,27 +1,96 @@
-<html><head></head><body><p>I am very happy to share that <a target="_blank" href="https://roc-lang.org">Roc</a> is now available on <a target="_blank" href="https://exercism.org/tracks/roc">Exercism</a>! Exercism is a delightful platform for learning programming and especially new and exotic languages. Right now there are tracks for 74(!) languages including all the languages you've heard of like Python, Java, and Go, plenty you wouldn't expect like COBOL, SQLite, and JQ, and many more that you likely haven't heard of like Ballerina, Pyret, and Wren. After completing an exercise in the web editor or locally using the CLI, you can publish your solution, browse other users' solutions for ideas, and even request free mentoring on your work.</p>
-<p>To celebrate Roc launching on Exercism, I'm going to walk through my solution to the <a target="_blank" href="https://exercism.org/tracks/roc/exercises/forth">Forth exercise</a> and highlight one of my favorite Roc features: error handling.</p>
-<hr>
-<p><a target="_blank" href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a> is a stack based programming language where the entire state of the program is stored in a single stack data structure. In a stack based language, a program is a list of operations that each modify the stack in some way: pushing new values, reordering the stack, etc. For example, the program <code>3 dup *</code> computes the square of 3 by duplicating 3 and multiplying the top two numbers. With the state of the stack on the left and the remaining operations in the program on the right, the execution looks like this:</p>
-<pre><code>| 3 dup *
+<html>
+    <head>
+        <link rel="stylesheet" href="roc-default.css" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div id="main-content">
+            <header>
+                <h1>Roc, Exercism, Forth!</h1>
+                2024-09-26
+                <br />
+                Isaac Van Doren
+            </header>
+            <hr />
+            <p>
+                I am very happy to share that
+                <a target="_blank" href="https://roc-lang.org">Roc</a> is now
+                available on
+                <a target="_blank" href="https://exercism.org/tracks/roc"
+                    >Exercism</a
+                >! Exercism is a delightful platform for learning programming
+                and especially new and exotic languages. Right now there are
+                tracks for 74(!) languages including all the languages you've
+                heard of like Python, Java, and Go, plenty you wouldn't expect
+                like COBOL, SQLite, and JQ, and many more that you likely
+                haven't heard of like Ballerina, Pyret, and Wren. After
+                completing an exercise in the web editor or locally using the
+                CLI, you can publish your solution, browse other users'
+                solutions for ideas, and even request free mentoring on your
+                work.
+            </p>
+            <p>
+                To celebrate Roc launching on Exercism, I'm going to walk
+                through my solution to the
+                <a
+                    target="_blank"
+                    href="https://exercism.org/tracks/roc/exercises/forth"
+                    >Forth exercise</a
+                >
+                and highlight one of my favorite Roc features: error handling.
+            </p>
+            <hr />
+            <p>
+                <a
+                    target="_blank"
+                    href="https://en.wikipedia.org/wiki/Forth_(programming_language)"
+                    >Forth</a
+                >
+                is a stack based programming language where the entire state of
+                the program is stored in a single stack data structure. In a
+                stack based language, a program is a list of operations that
+                each modify the stack in some way: pushing new values,
+                reordering the stack, etc. For example, the program
+                <code>3 dup *</code> computes the square of 3 by duplicating 3
+                and multiplying the top two numbers. With the state of the stack
+                on the left and the remaining operations in the program on the
+                right, the execution looks like this:
+            </p>
+            <pre><code>| 3 dup *
 3 | dup *
 3 3 | *
 9 |
 </code></pre>
-<p>We can also define new compound operations. Here we've defined a new operation called <code>square</code> that is equivalent to <code>dup *</code>.</p>
-<pre><code>: square dup * ;
+            <p>
+                We can also define new compound operations. Here we've defined a
+                new operation called <code>square</code> that is equivalent to
+                <code>dup *</code>.
+            </p>
+            <pre><code>: square dup * ;
 3 square -- Evaluates to 9
 </code></pre>
-<p>Our subset of Forth will support integers, simple arithmetic (<code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>), and four stack operations:</p>
-<ul>
-<li><code>DUP</code>&nbsp;- duplicate the top element</li>
-<li><code>DROP</code>&nbsp;- remove the top element</li>
-<li><code>SWAP</code>&nbsp;- swap the top two elements</li>
-<li><code>OVER</code>&nbsp;- copy the second from top element to the top</li>
-</ul>
-<h3>Solution</h3>
-<h4>Parsing</h4>
-<p>First up, we need to parse our input. Our goal is to transform the input from a string into a simple list of operations that our interpreter understands.</p>
-<pre><code class="language-roc">parse <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Op</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">[</span><span class="hljs-type">UnableToParseDef</span> <span class="hljs-type">Str</span>, <span class="hljs-type">UnknownName</span> <span class="hljs-type">Str</span><span class="hljs-symbol">]</span>
+            <p>
+                Our subset of Forth will support integers, simple arithmetic
+                (<code>+</code>, <code>-</code>, <code>*</code>,
+                <code>/</code>), and four stack operations:
+            </p>
+            <ul>
+                <li><code>DUP</code>&nbsp;- duplicate the top element</li>
+                <li><code>DROP</code>&nbsp;- remove the top element</li>
+                <li><code>SWAP</code>&nbsp;- swap the top two elements</li>
+                <li>
+                    <code>OVER</code>&nbsp;- copy the second from top element to
+                    the top
+                </li>
+            </ul>
+            <h2>Solution</h2>
+            <h3>Parsing</h3>
+            <p>
+                First up, we need to parse our input. Our goal is to transform
+                the input from a string into a simple list of operations that
+                our interpreter understands.
+            </p>
+            <pre><code class="language-roc">parse <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Op</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">[</span><span class="hljs-type">UnableToParseDef</span> <span class="hljs-type">Str</span>, <span class="hljs-type">UnknownName</span> <span class="hljs-type">Str</span><span class="hljs-symbol">]</span>
 parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</span>
     lowercase = toLower str
     <span class="hljs-keyword">when</span> <span class="hljs-type">Str</span>.split <span class="hljs-symbol">(</span><span class="hljs-type">Str</span>.trim lowercase<span class="hljs-symbol">)</span> <span class="hljs-string">"\n"</span> <span class="hljs-keyword">is</span>
@@ -34,12 +103,49 @@ parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</s
 
         <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Ok</span> <span class="hljs-symbol">[</span><span class="hljs-symbol">]</span> <span class="hljs-comment"># We'll let the empty program return the empty stack</span>
 </code></pre>
-<p>Here we split the input into the first zero or more lines of definitions and a final line of operations to perform. We then take the lines containing definitions and pass them into <code>parseDefs</code> to convert them into a dictionary mapping the name of each definition to the list of operations it represents. We'll then feed the dictionary of definitions and the body of the program into <code>flattenDefs</code> to produce a program containing only builtin operations which we then convert into a tag union representing the different kinds of operations.</p>
-<p>Here's where error handling comes in: we can read <code>parse</code> from top to bottom with our focus only on the happy path, with confidence that the error states are all still being tracked. Many languages make it easy to write the happy path without worrying about errors at the cost of obscuring what kinds of errors are possible and where they can come from. Some languages make error handling very explicit at the expense of the code becoming more difficult to read and write. Roc aims to have the best of both worlds by offering easy yet robust error handling.</p>
-<p>An important part of easy error handling is being able to say "I can't handle this error here, if it happens let someone else take care of it for me." Roc accomplishes this with the <code>?</code> operator. When applied to a function that returns a result type, it will short circuit if an error is returned and otherwise continue execution normally with the success value. This prevents us from needing to handle errors immediately, decreases indentation, and keeps happy paths clean.</p>
-<h4>Interpreting</h4>
-<p>Now that we've parsed our input, we can start evaluating the program. To do this, we'll define a function called <code>step</code> that takes the stack and an operation and produces a new stack. We can apply this function for each operation to produce the final state of the stack.</p>
-<pre><code class="language-roc">step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">[</span><span class="hljs-type">Arity</span> <span class="hljs-type">U8</span>, <span class="hljs-type">DivByZero</span><span class="hljs-symbol">]</span>
+            <p>
+                Here we split the input into the first zero or more lines of
+                definitions and a final line of operations to perform. We then
+                take the lines containing definitions and pass them into
+                <code>parseDefs</code> to convert them into a dictionary mapping
+                the name of each definition to the list of operations it
+                represents. We'll then feed the dictionary of definitions and
+                the body of the program into <code>flattenDefs</code> to produce
+                a program containing only builtin operations which we then
+                convert into a tag union representing the different kinds of
+                operations.
+            </p>
+            <p>
+                Here's where error handling comes in: we can read
+                <code>parse</code> from top to bottom with our focus only on the
+                happy path, with confidence that the error states are all still
+                being tracked. Many languages make it easy to write the happy
+                path without worrying about errors at the cost of obscuring what
+                kinds of errors are possible and where they can come from. Some
+                languages make error handling very explicit at the expense of
+                the code becoming more difficult to read and write. Roc aims to
+                have the best of both worlds by offering easy yet robust error
+                handling.
+            </p>
+            <p>
+                An important part of easy error handling is being able to say "I
+                can't handle this error here, if it happens let someone else
+                take care of it for me." Roc accomplishes this with the
+                <code>?</code> operator. When applied to a function that returns
+                a result type, it will short circuit if an error is returned and
+                otherwise continue execution normally with the success value.
+                This prevents us from needing to handle errors immediately,
+                decreases indentation, and keeps happy paths clean.
+            </p>
+            <h3>Interpreting</h3>
+            <p>
+                Now that we've parsed our input, we can start evaluating the
+                program. To do this, we'll define a function called
+                <code>step</code> that takes the stack and an operation and
+                produces a new stack. We can apply this function for each
+                operation to produce the final state of the stack.
+            </p>
+            <pre><code class="language-roc">step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">[</span><span class="hljs-type">Arity</span> <span class="hljs-type">U8</span>, <span class="hljs-type">DivByZero</span><span class="hljs-symbol">]</span>
 step = <span class="hljs-symbol">\</span>stack, op <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-keyword">when</span> op <span class="hljs-keyword">is</span>
         <span class="hljs-type">Number</span> x <span class="hljs-symbol">-&gt;</span>
@@ -63,14 +169,45 @@ step = <span class="hljs-symbol">\</span>stack, op <span class="hljs-symbol">-&g
                 <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Err</span> <span class="hljs-symbol">(</span><span class="hljs-type">Arity</span> 2<span class="hljs-symbol">)</span>
         <span class="hljs-comment"># etc</span>
 </code></pre>
-<p>First we match against the type of operation to determine which stack transformation to apply. Then, within each operation, pattern matching on lists allows us to assert that the input is the right shape while simultaneously bringing the relevant data into scope. In the <code>Divide</code> branch we check if the top of stack is zero to return a division-by-zero error, followed by the valid case when the stack contains two values, followed by another error case where the stack has less than two arguments.</p>
-<p>Our <code>step</code> function returns a result with a tag union as the error type.</p>
-<pre><code class="language-roc">step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">[</span><span class="hljs-type">Arity</span> <span class="hljs-type">U8</span>, <span class="hljs-type">DivByZero</span><span class="hljs-symbol">]</span>
+            <p>
+                First we match against the type of operation to determine which
+                stack transformation to apply. Then, within each operation,
+                pattern matching on lists allows us to assert that the input is
+                the right shape while simultaneously bringing the relevant data
+                into scope. In the <code>Divide</code> branch we check if the
+                top of stack is zero to return a division-by-zero error,
+                followed by the valid case when the stack contains two values,
+                followed by another error case where the stack has less than two
+                arguments.
+            </p>
+            <p>
+                Our <code>step</code> function returns a result with a tag union
+                as the error type.
+            </p>
+            <pre><code class="language-roc">step <span class="hljs-symbol">:</span> <span class="hljs-type">Stack</span>, <span class="hljs-type">Op</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-symbol">[</span><span class="hljs-type">Arity</span> <span class="hljs-type">U8</span>, <span class="hljs-type">DivByZero</span><span class="hljs-symbol">]</span>
 </code></pre>
-<p>This tag union tracks all possible errors that could be returned from this function: either a function was called with the wrong number of arguments or division by zero was attempted. When we call <code>step</code> we don't have to worry about avoiding any kind of silent unchecked errors like null pointer dereferences because they just aren't possible. Knowing exactly what errors are possible and being explicit about where they occur lowers the cognitive load and frees us from having to program defensively.</p>
-<h4>User Output</h4>
-<p>Throughout the code we let a variety of errors bubble up to the top using the <code>?</code> operator. We can now collect all of these errors at the entry point and turn them into helpful error messages for the user. If any error is returned while parsing or evaluating the program, it will be captured in <code>result</code>.</p>
-<pre><code class="language-roc">evaluate <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-type">Str</span>
+            <p>
+                This tag union tracks all possible errors that could be returned
+                from this function: either a function was called with the wrong
+                number of arguments or division by zero was attempted. When we
+                call
+                <code>step</code> we don't have to worry about avoiding any kind
+                of silent unchecked errors like null pointer dereferences
+                because they just aren't possible. Knowing exactly what errors
+                are possible and being explicit about where they occur lowers
+                the cognitive load and frees us from having to program
+                defensively.
+            </p>
+            <h3>User Output</h3>
+            <p>
+                Throughout the code we let a variety of errors bubble up to the
+                top using the <code>?</code> operator. We can now collect all of
+                these errors at the entry point and turn them into helpful error
+                messages for the user. If any error is returned while parsing or
+                evaluating the program, it will be captured in
+                <code>result</code>.
+            </p>
+            <pre><code class="language-roc">evaluate <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-type">Stack</span> <span class="hljs-type">Str</span>
 evaluate = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">-&gt;</span>
     result =
         operations = parse<span class="hljs-symbol">?</span> program
@@ -78,8 +215,11 @@ evaluate = <span class="hljs-symbol">\</span>program <span class="hljs-symbol">-
 
     <span class="hljs-type">Result</span>.mapErr result handleError
 </code></pre>
-<p>If there is an error, we'll convert it to a string with <code>handleError</code>.</p>
-<pre><code class="language-roc">handleError <span class="hljs-symbol">:</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
+            <p>
+                If there is an error, we'll convert it to a string with
+                <code>handleError</code>.
+            </p>
+            <pre><code class="language-roc">handleError <span class="hljs-symbol">:</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 handleError = <span class="hljs-symbol">\</span>err <span class="hljs-symbol">-&gt;</span>
     <span class="hljs-keyword">when</span> err <span class="hljs-keyword">is</span>
         <span class="hljs-type">UnknownName</span> key <span class="hljs-symbol">-&gt;</span> <span class="hljs-string">"Hmm, I don't know any operations called '<span class="hljs-subst">$(<span class="hljs-interpolation-content"><span class="language-roc">key</span></span>)</span>'. Maybe there's a typo?"</span>
@@ -109,35 +249,116 @@ handleError = <span class="hljs-symbol">\</span>err <span class="hljs-symbol">-&
                     <span class="hljs-subst">$(<span class="hljs-interpolation-content"><span class="language-roc">showExecution stack ops</span></span>)</span>
                     "</span><span class="hljs-string">""</span>
 </code></pre>
-<p>Here we pattern match on the error union and use the context bundled with each tag to generate an error message. We didn't have to think about the specifics of how we would render errors for our users when we created each tag, but now that we are ready to, we have everything we need. The compiler will verify that our pattern matching is exhaustive which gives us peace of mind that we are handling every possible error.</p>
-<p>These are some of the error messages produced.</p>
-<pre><code># Input program: : foo dup dup
+            <p>
+                Here we pattern match on the error union and use the context
+                bundled with each tag to generate an error message. We didn't
+                have to think about the specifics of how we would render errors
+                for our users when we created each tag, but now that we are
+                ready to, we have everything we need. The compiler will verify
+                that our pattern matching is exhaustive which gives us peace of
+                mind that we are handling every possible error.
+            </p>
+            <p>These are some of the error messages produced.</p>
+            <pre><code># Input program: : foo dup dup
 
 This is supposed to be a definition, but I'm not sure how to parse it:
 : foo dup dup
 </code></pre>
-<pre><code># Input program: 12 34 drop swap
+            <pre><code># Input program: 12 34 drop swap
 
 Oops! 'swap' expected 2 arguments, but there weren't enough on the stack.
 12 | swap
 </code></pre>
-<h4>Tag Unions in Roc</h4>
-<p>Any sort of tag unions are useful for error handling, but Roc's have an additional edge because they are structural. With structural tag unions we don't have to declare a type externally and reference it by name. Instead, the type of a tag union is determined by the tags used in it like in <code>color</code>.</p>
-<pre><code class="language-roc">color <span class="hljs-symbol">:</span> <span class="hljs-type">Bool</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-symbol">[</span><span class="hljs-type">Red</span>, <span class="hljs-type">Blue</span><span class="hljs-symbol">]</span>
+            <h3>Tag Unions in Roc</h3>
+            <p>
+                Any sort of tag unions are useful for error handling, but Roc's
+                have an additional edge because they are structural. With
+                structural tag unions we don't have to declare a type externally
+                and reference it by name. Instead, the type of a tag union is
+                determined by the tags used in it like in <code>color</code>.
+            </p>
+            <pre><code class="language-roc">color <span class="hljs-symbol">:</span> <span class="hljs-type">Bool</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-symbol">[</span><span class="hljs-type">Red</span>, <span class="hljs-type">Blue</span><span class="hljs-symbol">]</span>
 color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&gt;</span>
 	<span class="hljs-keyword">if</span> condition <span class="hljs-keyword">then</span> <span class="hljs-type">Red</span> <span class="hljs-keyword">else</span> <span class="hljs-type">Blue</span>
 </code></pre>
-<p>If I add an operation to the interpreter that can encounter a new kind of error, all I have to do is return a new tag from <code>step</code> like <code>TypeMismatch</code> or <code>InputMustBePositive</code>. The new error tag will then immediately be reflected in the return type of the function.</p>
-<p>Additionally, because Roc has complete type inference, the compile will track everything for us regardless of where we choose to include type annotations. You might have noticed that I omitted the input type to <code>handleError</code> with an underscore.</p>
-<pre><code>handleError : _ -&gt; Str
+            <p>
+                If I add an operation to the interpreter that can encounter a
+                new kind of error, all I have to do is return a new tag from
+                <code>step</code> like <code>TypeMismatch</code> or
+                <code>InputMustBePositive</code>. The new error tag will then
+                immediately be reflected in the return type of the function.
+            </p>
+            <p>
+                Additionally, because Roc has complete type inference, the
+                compile will track everything for us regardless of where we
+                choose to include type annotations. You might have noticed that
+                I omitted the input type to <code>handleError</code> with an
+                underscore.
+            </p>
+            <pre><code>handleError : _ -&gt; Str
 </code></pre>
-<p>This saves us from having to write out the whole error union and keep it updated. Similarly, I like to omit the result error type in many functions so that when I make a modification like renaming a tag or updating its payload I don't have to update any annotations.</p>
-<pre><code>step : Stack, Op -&gt; Result Stack _
+            <p>
+                This saves us from having to write out the whole error union and
+                keep it updated. Similarly, I like to omit the result error type
+                in many functions so that when I make a modification like
+                renaming a tag or updating its payload I don't have to update
+                any annotations.
+            </p>
+            <pre><code>step : Stack, Op -&gt; Result Stack _
 </code></pre>
-<p>Roc's combination of deferred errors with <code>?</code>, structural unions, and type inference makes it incredibly easy to fall into the rich error handling <a target="_blank" href="https://blog.codinghorror.com/falling-into-the-pit-of-success/">pit of success</a>. Why wouldn't I prioritize helpful errors in my program when it's so effortless? This error handling story truly makes it a joy to use the Roc ecosystem.</p>
-<h4>What next?</h4>
-<p>If you'd like to give Roc a try, I recommend starting with the <a target="_blank" href="https://www.roc-lang.org/tutorial">tutorial</a>. Of course, The Roc <a target="_blank" href="https://exercism.org/tracks/roc">Exercism track</a> is a delightful way to practice the language, and the <a target="_blank" href="https://roc.zulipchat.com/">Roc Zulip Chat</a> is a great place to ask questions and contribute to the ecosystem. If you have questions about this post feel free to ping me on Zulip. I wrote an interpreter for a larger stack based language in Roc called <a target="_blank" href="https://github.com/isaacvando/gob">Gob</a> with more datatypes, operations, control flow, and quotations after I was inspired by Douglas Creager's excellent Strange Loop talk &nbsp;<em><a target="_blank" href="https://youtu.be/umSuLpjFUf8?si=SV1c_Zwc5F4-cPJS">Concatenative programming and stack-based languages</a></em>. Finally, a massive shoutout is in order for <a target="_blank" href="https://github.com/ageron">Aurélien Geron</a> who started the <a target="_blank" href="https://github.com/exercism/roc">Exercism track</a>, has done a huge amount of work to build it out, and has been a joy to collaborate with.</p>
-<pre><code class="language-roc"><span class="hljs-keyword">module</span> <span class="hljs-symbol">[</span>evaluate<span class="hljs-symbol">]</span>
+            <p>
+                Roc's combination of deferred errors with <code>?</code>,
+                structural unions, and type inference makes it incredibly easy
+                to fall into the rich error handling
+                <a
+                    target="_blank"
+                    href="https://blog.codinghorror.com/falling-into-the-pit-of-success/"
+                    >pit of success</a
+                >. Why wouldn't I prioritize helpful errors in my program when
+                it's so effortless? This error handling story truly makes it a
+                joy to use the Roc ecosystem.
+            </p>
+            <h3>What next?</h3>
+            <p>
+                If you'd like to give Roc a try, I recommend starting with the
+                <a target="_blank" href="https://www.roc-lang.org/tutorial"
+                    >tutorial</a
+                >. Of course, The Roc
+                <a target="_blank" href="https://exercism.org/tracks/roc"
+                    >Exercism track</a
+                >
+                is a delightful way to practice the language, and the
+                <a target="_blank" href="https://roc.zulipchat.com/"
+                    >Roc Zulip Chat</a
+                >
+                is a great place to ask questions and contribute to the
+                ecosystem. If you have questions about this post feel free to
+                ping me on Zulip. I wrote an interpreter for a larger stack
+                based language in Roc called
+                <a target="_blank" href="https://github.com/isaacvando/gob"
+                    >Gob</a
+                >
+                with more datatypes, operations, control flow, and quotations
+                after I was inspired by Douglas Creager's excellent Strange Loop
+                talk &nbsp;<em
+                    ><a
+                        target="_blank"
+                        href="https://youtu.be/umSuLpjFUf8?si=SV1c_Zwc5F4-cPJS"
+                        >Concatenative programming and stack-based languages</a
+                    ></em
+                >. Finally, a massive shoutout is in order for
+                <a target="_blank" href="https://github.com/ageron"
+                    >Aurélien Geron</a
+                >
+                who started the
+                <a target="_blank" href="https://github.com/exercism/roc"
+                    >Exercism track</a
+                >, has done a huge amount of work to build it out, and has been
+                a joy to collaborate with.
+            </p>
+            <details>
+                <summary>Full solution</summary>
+                <pre><code class="language-roc"><span class="hljs-keyword">module</span> <span class="hljs-symbol">[</span>evaluate<span class="hljs-symbol">]</span>
 <span class="hljs-comment"># Types</span>
 <span class="hljs-type">Defs</span> <span class="hljs-symbol">:</span> <span class="hljs-type">Dict</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Str</span><span class="hljs-symbol">)</span>
 <span class="hljs-type">Stack</span> <span class="hljs-symbol">:</span> <span class="hljs-type">List</span> <span class="hljs-type">I16</span>
@@ -316,6 +537,13 @@ toLower = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;<
         <span class="hljs-type">Ok</span> s <span class="hljs-symbol">-&gt;</span> s
         <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-keyword">crash</span> <span class="hljs-string">"There was an unexpected error converting back to Str"</span>
 </code></pre>
-<hr>
-<p><a target="_blank" href="/">home</a></p>
-</body></html>
+            </details>
+            <hr />
+        </div>
+        <footer>
+            <p>
+                <a href="/">home</a>
+            </p>
+        </footer>
+    </body>
+</html>
