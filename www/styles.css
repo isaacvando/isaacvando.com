@@ -1,8 +1,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+:root {
+    --color-background: #fffdf7;
+    --color-text: #333333;
+    --color-link: #357ae1;
+    --color-link-hover: #19b37d;
+    --color-border: #e0e0e0;
+    --color-code-background: #f5f3e8;
+    --color-code-border: #e0ded3;
+}
+
 body {
     font-family: "Poppins", sans-serif;
     line-height: 1.4;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+a {
+    color: var(--color-link);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-link-hover);
 }
 
 h1,
@@ -15,6 +36,12 @@ h6 {
     font-weight: 700;
 }
 
+hr {
+    border: none;
+    height: 1px;
+    background-color: var(--color-border);
+}
+
 #main-content {
     margin-left: auto;
     margin-right: auto;
@@ -23,4 +50,24 @@ h6 {
 
 footer {
     text-align: center;
+}
+
+pre {
+    background-color: var(--color-code-background);
+    border: 1px solid var(--color-code-border);
+    border-radius: 4px;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+pre code {
+    display: block;
+    line-height: 1.5;
+}
+
+:not(pre) > code {
+    background-color: var(--color-code-background);
+    color: var(--color-text);
+    padding: 2px 4px;
+    border-radius: 3px;
 }
