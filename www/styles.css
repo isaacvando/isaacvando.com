@@ -3,11 +3,12 @@
 :root {
     --color-background: #fffdf7;
     --color-text: #333333;
-    --color-link: #357ae1;
-    --color-link-hover: #19b37d;
+    --color-accent: #357ae1;
+    --color-accent-secondary: #19b37d;
     --color-border: #e0e0e0;
-    --color-code-background: #f5f3e8;
-    --color-code-border: #e0ded3;
+    --color-background-secondary: #f5f3e8;
+    --color-border-secondary: #e0ded3;
+    --width-content: 800px;
 }
 
 body {
@@ -18,12 +19,11 @@ body {
 }
 
 a {
-    color: var(--color-link);
-    text-decoration: none;
+    color: var(--color-accent);
 }
 
 a:hover {
-    color: var(--color-link-hover);
+    color: var(--color-accent-secondary);
 }
 
 h1,
@@ -45,7 +45,7 @@ hr {
 #main-content {
     margin-left: auto;
     margin-right: auto;
-    max-width: 700px;
+    max-width: var(--width-content);
 }
 
 footer {
@@ -53,8 +53,8 @@ footer {
 }
 
 pre {
-    background-color: var(--color-code-background);
-    border: 1px solid var(--color-code-border);
+    background-color: var(--color-background-secondary);
+    border: 1px solid var(--color-border-secondary);
     border-radius: 4px;
     padding: 15px;
     overflow-x: auto;
@@ -66,7 +66,7 @@ pre code {
 }
 
 :not(pre) > code {
-    background-color: var(--color-code-background);
+    background-color: var(--color-background-secondary);
     color: var(--color-text);
     padding: 2px 4px;
     border-radius: 3px;
