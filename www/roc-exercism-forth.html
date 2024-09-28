@@ -102,7 +102,7 @@
             <p>
                 Our subset of Forth will support integers, simple arithmetic
                 (<code>+</code>, <code>-</code>, <code>*</code>,
-                <code>/</code>), and four stack operations:
+                <code>/</code>), and four stack operations.
             </p>
             <ul>
                 <li><code>DUP</code>&nbsp;- duplicate the top element</li>
@@ -116,8 +116,8 @@
             <h2>Parsing</h2>
             <p>
                 First up, we need to parse our input. Our goal is to transform
-                the input from a string into a simple list of operations that
-                our interpreter understands.
+                the input string into a simple list of operations that our
+                interpreter understands.
             </p>
             <pre><code class="language-roc">parse <span class="hljs-symbol">:</span> <span class="hljs-type">Str</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Result</span> <span class="hljs-symbol">(</span><span class="hljs-type">List</span> <span class="hljs-type">Op</span><span class="hljs-symbol">)</span> <span class="hljs-symbol">[</span><span class="hljs-type">UnableToParseDef</span> <span class="hljs-type">Str</span>, <span class="hljs-type">UnknownName</span> <span class="hljs-type">Str</span><span class="hljs-symbol">]</span>
 parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</span>
@@ -157,14 +157,14 @@ parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</s
                 handling.
             </p>
             <p>
-                An important part of easy error handling is being able to say "I
+                A key component of easy error handling is being able to say "I
                 can't handle this error here, if it happens let someone else
                 take care of it for me." Roc accomplishes this with the
                 <code>?</code> operator. When applied to a function that returns
-                a result type, it will short circuit if an error is returned and
-                otherwise continue execution normally with the success value.
-                This prevents us from needing to handle errors immediately,
-                decreases indentation, and keeps happy paths clean.
+                a result, if an error is returned it short circuits, and if a
+                success is returned it continues execution normally with the
+                success value. This prevents us from needing to handle errors
+                immediately, decreases indentation, and keeps happy paths clean.
             </p>
             <h2>Interpreting</h2>
             <p>
@@ -319,17 +319,17 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
             </p>
             <p>
                 Additionally, because Roc has complete type inference, the
-                compile will track everything for us regardless of where we
-                choose to include type annotations. You might have noticed that
-                I omitted the input type to <code>handleError</code> with an
-                underscore.
+                compiler will track everything for us regardless of where we
+                choose to include type annotations. For example, you might have
+                noticed that I omitted the input type to
+                <code>handleError</code> with an underscore.
             </p>
             <pre><code class="language-roc">handleError <span class="hljs-symbol">:</span> <span class="hljs-symbol">_</span> <span class="hljs-symbol">-&gt;</span> <span class="hljs-type">Str</span>
 </code></pre>
             <p>
                 This saves us from having to write out the whole error union and
-                keep it updated. Similarly, I like to omit the result error type
-                in many functions so that when I make a modification like
+                keep it up to date. Similarly, I like to omit the result error
+                type in many functions so that when I make a modification like
                 renaming a tag or updating its payload I don't have to update
                 any annotations.
             </p>
@@ -338,14 +338,15 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
             <p>
                 Roc's combination of deferred errors with <code>?</code>,
                 structural unions, and type inference makes it incredibly easy
-                to fall into the rich error handling
+                to fall into the
                 <a
                     target="_blank"
                     href="https://blog.codinghorror.com/falling-into-the-pit-of-success/"
                     >pit of success</a
-                >. Why wouldn't I prioritize helpful errors in my program when
-                it's so effortless? This error handling story truly makes it a
-                joy to use the Roc ecosystem.
+                >
+                of rich error handling. Why wouldn't I prioritize helpful errors
+                in my program when it's so effortless? This error handling story
+                truly makes it a joy to use the Roc ecosystem.
             </p>
             <h2>What next?</h2>
             <p>
@@ -368,8 +369,9 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
                     >Gob</a
                 >
                 with more datatypes, operations, control flow, and quotations
-                after I was inspired by Douglas Creager's excellent Strange Loop
-                talk &nbsp;<em
+                after being inspired by Douglas Creager's excellent Strange Loop
+                talk
+                <em
                     ><a
                         target="_blank"
                         href="https://youtu.be/umSuLpjFUf8?si=SV1c_Zwc5F4-cPJS"
