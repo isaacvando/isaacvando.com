@@ -37,7 +37,6 @@ h6 {
 }
 
 h1 {
-    display: inline-block;
     position: relative;
 }
 
@@ -71,7 +70,6 @@ hr {
 
 #social-icons {
     margin: 10px 0;
-    display: flex;
 }
 
 #social-icons img {
@@ -87,7 +85,6 @@ hr {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
 }
 
 footer {
