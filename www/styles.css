@@ -48,6 +48,19 @@ hr {
     max-width: var(--width-content);
 }
 
+#social-icons {
+    margin: 10px 0;
+}
+
+#social-icons img {
+    width: 30px;
+    vertical-align: middle;
+}
+
+#social-icons img:hover {
+    opacity: 0.8;
+}
+
 footer {
     text-align: center;
 }
