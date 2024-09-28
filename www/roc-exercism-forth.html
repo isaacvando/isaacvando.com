@@ -68,7 +68,7 @@
                 and highlight one of my favorite Roc features: error handling.
             </p>
 
-            <h3>Forth</h3>
+            <h2>Forth</h2>
             <p>
                 <a
                     target="_blank"
@@ -112,7 +112,7 @@
                     the top
                 </li>
             </ul>
-            <h3>Parsing</h3>
+            <h2>Parsing</h2>
             <p>
                 First up, we need to parse our input. Our goal is to transform
                 the input from a string into a simple list of operations that
@@ -165,7 +165,7 @@ parse = <span class="hljs-symbol">\</span>str <span class="hljs-symbol">-&gt;</s
                 This prevents us from needing to handle errors immediately,
                 decreases indentation, and keeps happy paths clean.
             </p>
-            <h3>Interpreting</h3>
+            <h2>Interpreting</h2>
             <p>
                 Now that we've parsed our input, we can start evaluating the
                 program. To do this, we'll define a function called
@@ -226,7 +226,7 @@ step = <span class="hljs-symbol">\</span>stack, op <span class="hljs-symbol">-&g
                 the cognitive load and frees us from having to program
                 defensively.
             </p>
-            <h3>User Output</h3>
+            <h2>User Output</h2>
             <p>
                 Throughout the code we let a variety of errors bubble up to the
                 top using the <code>?</code> operator. We can now collect all of
@@ -297,7 +297,7 @@ This is supposed to be a definition, but I'm not sure how to parse it:
 Oops! 'swap' expected 2 arguments, but there weren't enough on the stack.
 12 | swap
 </code></pre>
-            <h3>Tag Unions in Roc</h3>
+            <h2>Tag Unions in Roc</h2>
             <p>
                 Any sort of tag unions are useful for error handling, but Roc's
                 have an additional edge because they are structural. With
@@ -346,7 +346,7 @@ color = <span class="hljs-symbol">\</span>condition <span class="hljs-symbol">-&
                 it's so effortless? This error handling story truly makes it a
                 joy to use the Roc ecosystem.
             </p>
-            <h3>What next?</h3>
+            <h2>What next?</h2>
             <p>
                 If you'd like to give Roc a try, I recommend starting with the
                 <a target="_blank" href="https://www.roc-lang.org/tutorial"
