@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" name="Content-Type">
+    <link rel="icon" href="favicon.png" type="image/png">
+    <title>There is no "business side"</title>
+    <link rel="preload" href="styles.css" as="style">
+    <link
+      rel="preload"
+      href="fonts/Poppins-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link
+      rel="preload"
+      href="fonts/Poppins-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link rel="stylesheet" href="roc-default.css">
+    <link rel="stylesheet" href="styles.css">
+    <script
+      data-goatcounter="https://isaacvando.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+    <meta
+      name="description"
+      content="Explore Roc's error handling through a Forth interpreter implementation. Learn about Roc's launch on Exercism and dive into stack-based programming concepts."
+    >
+    <meta name="author" content="Isaac Van Doren">
+    <meta property="og:type" content="article">
+    <meta
+      property="og:url"
+      content="https://isaacvando.com/roc-exercism-forth"
+    >
+    <meta property="og:title" content="Roc, Exercism, Forth!">
+    <meta
+      property="og:description"
+      content="Explore Roc's error handling through a Forth interpreter implementation. Learn about Roc's launch on Exercism and dive into stack-based programming concepts."
+    >
+    <meta
+      property="og:image"
+      content="https://isaacvando.com/roc-exercism-forth.png"
+    >
+    <meta property="twitter:title" content="There is no &quot;business side&quot;">
+    <meta
+      property="twitter:image"
+      content="https://isaacvando.com/roc-exercism-forth.png"
+    >
+    <meta name="twitter:site" content="@isaacvando">
+    <meta name="twitter:creator" content="@isaacvando">
+  </head>
+  <body>
+    <div id="main-content">
+      <header>
+        <h1>Drinking the VPS Kool-Aid</h1>
+        <div>
+          <div>Isaac Van Doren</div>
+          <div>2024-09-27</div>
+        </div>
+      </header>
+      <h1>Drinking the VPS Kool-Aid</h1>
+      <p>I drank the Kool-Aid. I'm sorry to say it, but I'm a VPS shill now.</p>
+      <p>I decided to build the ticketing system (and website) for
+        <a href="https://softwareshould.work">Software Should Work</a>
+        myself. There are some excellent off-the-shelf options like
+        <a href="https://ti.to">Tito</a>
+        or
+        <a href="https://luma.com">Luma</a>
+        that you probably
+        <em>should</em>
+        just use. But I had good reasons to build it myself instead:</p>
+      <ul>
+        <li>Save on some fees</li>
+        <li>Avoid a dependency</li>
+        <li>Most importantly: it would be fun!
+Given this bulletproof cost-benefit analysis, I set out to build instead of buy.</li>
+      </ul>
+      <h2>A server</h2>
+      <p>Step one was to find a server. After some comparing, a $5 VPS from Hetzner in Virginia seemed like the best option. After passing through a surprisingly involved identity verification process and entering my credit card into a very clearly German checkout form, I was off to the races. I've heard lots of good things about Hetzner and have not been disappointed in the least. The service, pricing, and console have all been great.</p>
+      <h2>An application</h2>
+      <p>I built the app server in Rust using Axum. Again, it's been a great experience: statically linked executables, excellent performance, good tooling, a rich type system, etc. There's more to say about how the ticketing system itself works, but I'll write another post about that.</p>
+      <h2>A database</h2>
+      <p>I opted for SQLite and have been very pleased overall. It certainly has some oddities, like primary keys allowing
+        <code>null</code>s by default, foreign key checks being opt-in on a per-connection basis, and having a very loose type-system, but it's hard to beat the performance and operational simplicity of file-as-DB.</p>
+      <p>I couldn't risk losing ticket information, so naturally I needed backups. For this I chose
+        <a href="https://litestream.io">Litestream</a>, a tool that streams changes to object storage and supports super simple point-in-time recovery:
+        <code>litestream restore ssw.db</code>. It's wonderful to have such frequently recorded, easy to use backups for barely any cost.</p>
+      <p>I chose
+        <a href="https://www.backblaze.com/cloud-storage">Backblaze B2</a>
+        as my object storage because I read online that its free plan was structured in a way that would cover Litestream usage for many projects at no cost. Unfortunately this hasn't worked out in practice and I've had to pay a steep $2/month for Litestream. Of course this amount is inconsequential, but something seems off here. Litestream is issuing something like 3500
+        <a href="https://www.backblaze.com/cloud-storage/transaction-pricing">Class C transactions</a>
+        every day which exceeds B2's free tier. I suspect it is calling ListObjectsV2 on a regular interval to do compaction. Unfortunately none of my attempts at modifying the configuration have decreased this rate. In principle I see no reason why Litestream should be continually making requests when the DB almost never changes.</p>
+      <p>My experience with Litestream overall has been mixed. The fundamental thing it does is fantastic and seems to work well, but there have been some rough edges. For example, I had to look through the commit history to find a workaround for a recently introduced bug that mysteriously caused B2 to reject the requests (<code>sign-payload: true</code>). Nevertheless, the amount of reliability per dollar I'm getting with it is fantastic.</p>
+      <h2>A web server</h2>
+      <p>I used
+        <a href="https://caddyserver.com/">Caddy</a>
+        for the web server and have been extremely pleased. It automatically sets up SSL certs for you which is wonderful, and the whole user experience has been solid. I'm using it to serve static files and proxy the rest of the traffic to the app server.</p>
+      <h2>A way to deploy</h2>
+      <p>My deployment strategy is a ~100 line script called
+        <code>deploy.sh</code>. It mostly copies files (using
+        <code>scp</code>
+        and
+        <code>rsync</code>) and runs commands on the server via
+        <code>ssh</code>. Caddy, Litestream, Grafana Alloy (used for logging), and the application are all run as
+        <code>systemd</code>
+        services and restarted or reloaded by the script. This was my first time really using
+        <code>systemd</code>
+        and it's wonderful. To run database migrations I wrote a short bash script that checks a
+        <code>migration</code>
+        table in the DB for the latest migration number and then runs any SQL files in
+        <code>/migrations</code>
+        with a higher index (<code>001_init.sql</code>,
+        <code>002_add_column.sql</code>, etc). I could have used something like
+        <a href="https://github.com/flyway/flyway">Flyway</a>, but why? This does everything I need with no dependencies.</p>
+      <p>I could have gotten away with simply
+        <code>systemd restart</code>ing the app server, but this was too risky. If I restarted the service and the new version crashed (suppose I misconfigured an essential environment variable), boom: downtime. To avoid this, I implemented blue-green deployments in 30 lines of bash. Fortunately systemd supports parameterizing the service configuration very simply. Once that was done I could create
+        <code>blue.env</code>
+        and
+        <code>green.env</code>
+        for each service specifying port
+        <code>3000</code>
+        and
+        <code>3001</code>
+        respectively. Suppose
+        <code>blue</code>
+        is currently running on port
+        <code>3000</code>: the script will start
+        <code>green</code>
+        on
+        <code>3001</code>, hit
+        <code>/healthcheck</code>
+        to confirm it's healthy, points Caddy at
+        <code>3001</code>, and gives the signal for
+        <code>blue</code>
+        to gracefully shutdown (allowing any in-flight requests to complete). What results is an extremely simple yet also robust set up with no additional dependencies.</p>
+      <h2>CI/CD</h2>
+      <p>I tried out
+        <a href="https://rwx.com">RWX</a>
+        for CI/CD on this project and have been totally blown away. I keep reading complaints about GitHub Actions online and thinking to myself &quot;Hey, RWX solves that!&quot;. RWX executes work as chunks of compute called tasks instead of being tied to a job-per-VM model. These tasks can then be arranged in a
+        <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a>
+        which you'll realize is clearly the right way to specify a CI pipeline once you try it. Each task is equipped with aggressive, automatic, content-based caching which makes the whole thing extremely fast.</p>
+      <h2>A way to observe</h2>
+      <p>I started out by reading logs directly with
+        <code>journalctl</code>
+        on the server (which works quite well honestly!), but I wanted a UI with easier querying and external log storage. To get this, I opted for Grafana Cloud's free tier. Once I had
+        <a href="https://github.com/grafana/alloy">Alloy</a>, Grafana's log shipping agent, running as another
+        <code>systemd</code>
+        service and modified the configuration to classify the logs from
+        <code>blue</code>
+        and
+        <code>green</code>
+        as a single service, I was off to the races. Grafana Cloud is quite nice. It is
+        <em>very</em>
+        feature rich which is great, but also overwhelming at times.</p>
+      <p>Originally I set up a free account in
+        <a href="https://hetrixtools.com/">HetrixTools</a>
+        to run healthchecks every minute against my
+        <code>/healthcheck</code>
+        endpoint and the home page. This was dead-simple to configure and a great experience. However, once I had Grafana Cloud running, I realized I could replace the healthchecks with synthetic checks and alert rules to remove the need for HetrixTools. This works, but was much more fiddly to get working, and still isn't quite right: about twice a week I get a false positive healthcheck.</p>
+      <h2>I have made no mistakes and nothing can be improved</h2>
+      <p>In the spirit of
+        <a href="https://meta.wikimedia.org/wiki/Cunningham%27s_Law">Cunningham's Law</a>, I hereby assert that every decision I made was optimal and nothing can be improved about my setup. (Suggestions welcome at
+        <a href="mailto:isaacjvandoren@gmail.com">isaacjvandoren@gmail.com</a>).</p>
+      <h2>Would I do it again?</h2>
+      <p>Absolutely. What I have now is a fast, cheap, powerful, and surprisingly robust system that I understand very well. I could have certainly avoided much of this effort by using an off-the-shelf tool instead, but that's no fun and I wouldn't have learned anything.</p>
+      <p>I can't decide if this setup is simple or complicated. It's a bit of both. I see the appeal in avoiding a lot of this work by using a polished PaaS like Vercel, Railway, etc, instead, but it really was quite doable, and the end result is a very pleasant-to-work-with system. It's easy to sleep well knowing that my bill will never exceed $5/month too.</p>
+      <p>The VPS Kool-Aid is sweet. Partake 🤗</p>
+      <h2>Psst...</h2>
+      <p>Do you like building good software? Come to
+        <a href="https://softwareshould.work">Software Should Work</a>!</p>
+    </div>
+    <footer>
+      <p>
+        <a href="/">home</a>
+        | &copy;
+        <span id="date"></span>
+        Isaac Van
+                Doren
+      </p>
+      <script>
+        document.getElementById("date").innerHTML =
+                    new Date().getFullYear();
+      </script>
+    </footer>
+  </body>
+</html>
