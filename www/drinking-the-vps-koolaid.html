@@ -64,23 +64,22 @@
           <div>2024-09-27</div>
         </div>
       </header>
-      <h1>Drinking the VPS Kool-Aid</h1>
       <p>I drank the Kool-Aid. I'm sorry to say it, but I'm a VPS shill now.</p>
-      <p>I decided to build the ticketing system (and website) for
+      <p>I decided to build the ticketing system and website for
         <a href="https://softwareshould.work">Software Should Work</a>
         myself. There are some excellent off-the-shelf options like
         <a href="https://ti.to">Tito</a>
         or
         <a href="https://luma.com">Luma</a>
-        that you probably
-        <em>should</em>
-        just use. But I had good reasons to build it myself instead:</p>
+        that you
+        <em>probably</em>
+        should just use. But I had good reasons to build it myself instead:</p>
       <ul>
         <li>Save on some fees</li>
         <li>Avoid a dependency</li>
-        <li>Most importantly: it would be fun!
-Given this bulletproof cost-benefit analysis, I set out to build instead of buy.</li>
+        <li>Most importantly: it would be fun!</li>
       </ul>
+      <p>Given this bulletproof cost-benefit analysis, I set out to build instead of buy.</p>
       <h2>A server</h2>
       <p>Step one was to find a server. After some comparing, a $5 VPS from Hetzner in Virginia seemed like the best option. After passing through a surprisingly involved identity verification process and entering my credit card into a very clearly German checkout form, I was off to the races. I've heard lots of good things about Hetzner and have not been disappointed in the least. The service, pricing, and console have all been great.</p>
       <h2>An application</h2>
@@ -111,13 +110,16 @@ Given this bulletproof cost-benefit analysis, I set out to build instead of buy.
         <code>systemd</code>
         services and restarted or reloaded by the script. This was my first time really using
         <code>systemd</code>
-        and it's wonderful. To run database migrations I wrote a short bash script that checks a
+        and it's wonderful.</p>
+      <p>
+        To run database migrations I wrote a short bash script that checks a
         <code>migration</code>
         table in the DB for the latest migration number and then runs any SQL files in
         <code>/migrations</code>
         with a higher index (<code>001_init.sql</code>,
         <code>002_add_column.sql</code>, etc). I could have used something like
-        <a href="https://github.com/flyway/flyway">Flyway</a>, but why? This does everything I need with no dependencies.</p>
+        <a href="https://github.com/flyway/flyway">Flyway</a>, but why? This does everything I need with no dependencies.
+      </p>
       <p>I could have gotten away with simply
         <code>systemd restart</code>ing the app server, but this was too risky. If I restarted the service and the new version crashed (suppose I misconfigured an essential environment variable), boom: downtime. To avoid this, I implemented blue-green deployments in 30 lines of bash. Fortunately systemd supports parameterizing the service configuration very simply. Once that was done I could create
         <code>blue.env</code>
@@ -135,10 +137,10 @@ Given this bulletproof cost-benefit analysis, I set out to build instead of buy.
         on
         <code>3001</code>, hit
         <code>/healthcheck</code>
-        to confirm it's healthy, points Caddy at
-        <code>3001</code>, and gives the signal for
+        to confirm it's healthy, point Caddy at
+        <code>3001</code>, and give the signal for
         <code>blue</code>
-        to gracefully shutdown (allowing any in-flight requests to complete). What results is an extremely simple yet also robust set up with no additional dependencies.</p>
+        to gracefully shutdown (allowing any in-flight requests to complete). What results is a simple yet robust setup with no additional dependencies.</p>
       <h2>CI/CD</h2>
       <p>I tried out
         <a href="https://rwx.com">RWX</a>
@@ -162,14 +164,14 @@ Given this bulletproof cost-benefit analysis, I set out to build instead of buy.
         <a href="https://hetrixtools.com/">HetrixTools</a>
         to run healthchecks every minute against my
         <code>/healthcheck</code>
-        endpoint and the home page. This was dead-simple to configure and a great experience. However, once I had Grafana Cloud running, I realized I could replace the healthchecks with synthetic checks and alert rules to remove the need for HetrixTools. This works, but was much more fiddly to get working, and still isn't quite right: about twice a week I get a false positive healthcheck.</p>
+        endpoint and the home page. This was dead-simple to configure and a great experience. However, once I had Grafana Cloud running, I realized I could replace the healthchecks with synthetic checks and alert rules to remove the need for HetrixTools. This was much more fiddly to get working and still isn't quite right. About twice a week I get a false positive healthcheck.</p>
       <h2>I have made no mistakes and nothing can be improved</h2>
       <p>In the spirit of
         <a href="https://meta.wikimedia.org/wiki/Cunningham%27s_Law">Cunningham's Law</a>, I hereby assert that every decision I made was optimal and nothing can be improved about my setup. (Suggestions welcome at
         <a href="mailto:isaacjvandoren@gmail.com">isaacjvandoren@gmail.com</a>).</p>
       <h2>Would I do it again?</h2>
-      <p>Absolutely. What I have now is a fast, cheap, powerful, and surprisingly robust system that I understand very well. I could have certainly avoided much of this effort by using an off-the-shelf tool instead, but that's no fun and I wouldn't have learned anything.</p>
-      <p>I can't decide if this setup is simple or complicated. It's a bit of both. I see the appeal in avoiding a lot of this work by using a polished PaaS like Vercel, Railway, etc, instead, but it really was quite doable, and the end result is a very pleasant-to-work-with system. It's easy to sleep well knowing that my bill will never exceed $5/month too.</p>
+      <p>Absolutely. What I have now is a fast, cheap, powerful, and surprisingly robust system that I understand very well. I could have certainly avoided much of this effort by using an off-the-shelf tool but that's no fun and I wouldn't have learned anything.</p>
+      <p>I can't decide if this setup is simple or complicated. It's a bit of both. I see the appeal in avoiding a lot of this work by using a polished PaaS like Vercel or Railway, but it really was quite doable, and the end result is a very pleasant-to-work-with system. It's easy to sleep well knowing that my bill will never exceed $5/month too.</p>
       <p>The VPS Kool-Aid is sweet. Partake 🤗</p>
       <h2>Psst...</h2>
       <p>Do you like building good software? Come to
