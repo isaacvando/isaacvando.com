@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta content="text/html; charset=UTF-8" name="Content-Type">
     <link rel="icon" href="favicon.png" type="image/png">
-    <title>There is no "business side"</title>
+    <title>Drinking the VPS Kool-Aid</title>
     <link rel="preload" href="styles.css" as="style">
     <link
       rel="preload"
@@ -28,32 +28,12 @@
       async
       src="//gc.zgo.at/count.js"
     ></script>
-    <meta
-      name="description"
-      content="Explore Roc's error handling through a Forth interpreter implementation. Learn about Roc's launch on Exercism and dive into stack-based programming concepts."
-    >
+    <meta name="description" content="The infrastructure behind the Software Should Work website">
     <meta name="author" content="Isaac Van Doren">
     <meta property="og:type" content="article">
-    <meta
-      property="og:url"
-      content="https://isaacvando.com/roc-exercism-forth"
-    >
-    <meta property="og:title" content="Roc, Exercism, Forth!">
-    <meta
-      property="og:description"
-      content="Explore Roc's error handling through a Forth interpreter implementation. Learn about Roc's launch on Exercism and dive into stack-based programming concepts."
-    >
-    <meta
-      property="og:image"
-      content="https://isaacvando.com/roc-exercism-forth.png"
-    >
-    <meta property="twitter:title" content="There is no &quot;business side&quot;">
-    <meta
-      property="twitter:image"
-      content="https://isaacvando.com/roc-exercism-forth.png"
-    >
-    <meta name="twitter:site" content="@isaacvando">
-    <meta name="twitter:creator" content="@isaacvando">
+    <meta property="og:url" content="https://isaacvando.com/drinking-the-vps-koolaid">
+    <meta property="og:title" content="Drinking the VPS Kool-Aid">
+    <meta property="og:description" content="The infrastructure behind the Software Should Work website">
   </head>
   <body>
     <div id="main-content">
@@ -61,10 +41,10 @@
         <h1>Drinking the VPS Kool-Aid</h1>
         <div>
           <div>Isaac Van Doren</div>
-          <div>2024-09-27</div>
+          <div>2026-02-16</div>
         </div>
       </header>
-      <p>I drank the Kool-Aid. I'm sorry to say it, but I'm a VPS shill now.</p>
+      <p>I drank the Kool-Aid. I'm sorry to say it, but I'm a VPS guy now.</p>
       <p>I decided to build the ticketing system and website for
         <a href="https://softwareshould.work">Software Should Work</a>
         myself. There are some excellent off-the-shelf options like
@@ -79,9 +59,10 @@
         <li>Avoid a dependency</li>
         <li>Most importantly: it would be fun!</li>
       </ul>
-      <p>Given this bulletproof cost-benefit analysis, I set out to build instead of buy.</p>
+      <p>Given this bulletproof cost-benefit analysis, I set out to build instead of buy. Source code available on
+        <a href="https://github.com/isaacvando/ssw">GitHub</a>.</p>
       <h2>A server</h2>
-      <p>Step one was to find a server. After some comparing, a $5 VPS from Hetzner in Virginia seemed like the best option. After passing through a surprisingly involved identity verification process and entering my credit card into a very clearly German checkout form, I was off to the races. I've heard lots of good things about Hetzner and have not been disappointed in the least. The service, pricing, and console have all been great.</p>
+      <p>Step one was to find a server. After some comparing, a $5 VPS from Hetzner in Virginia seemed like the best option. After passing through a surprisingly involved identity verification process and entering my credit card into a very German checkout form, I was off to the races. I've heard lots of good things about Hetzner and have not been disappointed in the least. The service, pricing, and console have all been great.</p>
       <h2>An application</h2>
       <p>I built the app server in Rust using Axum. Again, it's been a great experience: statically linked executables, excellent performance, good tooling, a rich type system, etc. There's more to say about how the ticketing system itself works, but I'll write another post about that.</p>
       <h2>A database</h2>
@@ -101,7 +82,7 @@
         <a href="https://caddyserver.com/">Caddy</a>
         for the web server and have been extremely pleased. It automatically sets up SSL certs for you which is wonderful, and the whole user experience has been solid. I'm using it to serve static files and proxy the rest of the traffic to the app server.</p>
       <h2>A way to deploy</h2>
-      <p>My deployment strategy is a ~100 line script called
+      <p>My deployment strategy is a ~100 line bash script called
         <code>deploy.sh</code>. It mostly copies files (using
         <code>scp</code>
         and
@@ -147,8 +128,8 @@
         for CI/CD on this project and have been totally blown away. I keep reading complaints about GitHub Actions online and thinking to myself &quot;Hey, RWX solves that!&quot;. RWX executes work as chunks of compute called tasks instead of being tied to a job-per-VM model. These tasks can then be arranged in a
         <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">DAG</a>
         which you'll realize is clearly the right way to specify a CI pipeline once you try it. Each task is equipped with aggressive, automatic, content-based caching which makes the whole thing extremely fast.</p>
-      <h2>A way to observe</h2>
-      <p>I started out by reading logs directly with
+      <h2>Observability</h2>
+      <p>I started out reading logs directly with
         <code>journalctl</code>
         on the server (which works quite well honestly!), but I wanted a UI with easier querying and external log storage. To get this, I opted for Grafana Cloud's free tier. Once I had
         <a href="https://github.com/grafana/alloy">Alloy</a>, Grafana's log shipping agent, running as another
@@ -157,22 +138,22 @@
         <code>blue</code>
         and
         <code>green</code>
-        as a single service, I was off to the races. Grafana Cloud is quite nice. It is
+        as a single service, I was good to go. Grafana Cloud is quite nice. It's
         <em>very</em>
-        feature rich which is great, but also overwhelming at times.</p>
+        feature rich which is nice but overwhelming at times.</p>
       <p>Originally I set up a free account in
         <a href="https://hetrixtools.com/">HetrixTools</a>
         to run healthchecks every minute against my
         <code>/healthcheck</code>
         endpoint and the home page. This was dead-simple to configure and a great experience. However, once I had Grafana Cloud running, I realized I could replace the healthchecks with synthetic checks and alert rules to remove the need for HetrixTools. This was much more fiddly to get working and still isn't quite right. About twice a week I get a false positive healthcheck.</p>
+      <h2>A CDN</h2>
+      <p>I'm using Cloudflare. No complaints! Delivering assets from their CDN helps with the landing page load time significantly. I also subsetted the font files to decrease their size from ~95kb to 5kb and converted the images to AVIF, both of which made for big speed-ups.</p>
       <h2>I have made no mistakes and nothing can be improved</h2>
       <p>In the spirit of
         <a href="https://meta.wikimedia.org/wiki/Cunningham%27s_Law">Cunningham's Law</a>, I hereby assert that every decision I made was optimal and nothing can be improved about my setup. (Suggestions welcome at
         <a href="mailto:isaacjvandoren@gmail.com">isaacjvandoren@gmail.com</a>).</p>
       <h2>Would I do it again?</h2>
       <p>Absolutely. What I have now is a fast, cheap, powerful, and surprisingly robust system that I understand very well. I could have certainly avoided much of this effort by using an off-the-shelf tool but that's no fun and I wouldn't have learned anything.</p>
-      <p>I can't decide if this setup is simple or complicated. It's a bit of both. I see the appeal in avoiding a lot of this work by using a polished PaaS like Vercel or Railway, but it really was quite doable, and the end result is a very pleasant-to-work-with system. It's easy to sleep well knowing that my bill will never exceed $5/month too.</p>
-      <p>The VPS Kool-Aid is sweet. Partake 🤗</p>
       <h2>Psst...</h2>
       <p>Do you like building good software? Come to
         <a href="https://softwareshould.work">Software Should Work</a>!</p>
