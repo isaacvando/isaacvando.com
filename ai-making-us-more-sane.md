@@ -2,6 +2,10 @@
 
 I never thought I'd say this, but AI is genuinely making some parts of software engineering _more_ sane than they were before. Yes, it's making plenty of things completely bonkers, but I don't need to tell you that. I keep noticing this phenomena where people say "Now becuase of AI we should start doing X" where X was the thing we should have been doing all along! With that, here's a list of some instances of this I've observed:
 
+Used to believe: code is expensive, developers are incapable.
+Now we believe: code is cheap, developers are capable.
+In reality, the second was true all along!
+
 ## Tests are a major part of your job now
 If they weren't before, they probably should have been then too!
 
@@ -23,10 +27,8 @@ If there isn't a good dependency to copy, often times it's not at all difficult 
 
 ## Your processes are getting in the way of your engineers
 
-## w
-Now that code is cheap, maybe it's better to write more code so that it's easier to understand our systems.
-
-Code has always been cheap. I 
+## Explicitness is a must
+Now that code is cheap, it's better to 
 
 ## Static types are great
 Agents have an easier time understanding a codebase with static types. So do humans!
