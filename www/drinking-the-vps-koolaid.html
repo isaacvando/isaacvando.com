@@ -146,6 +146,7 @@
         to run healthchecks every minute against my
         <code>/healthcheck</code>
         endpoint and the home page. This was dead-simple to configure and a great experience. However, once I had Grafana Cloud running, I realized I could replace the healthchecks with synthetic checks and alert rules to remove the need for HetrixTools. This was much more fiddly to get working and still isn't quite right. About twice a week I get a false positive healthcheck.</p>
+      <p>EDIT: Turns out the Grafana Cloud free tier includes a limited number of synthetics evaluations per month, so I ended up switching back to HetrixTools anyway.</p>
       <h2>A CDN</h2>
       <p>I'm using Cloudflare. No complaints! Delivering assets from their CDN helps with the landing page load time significantly. I also subsetted the font files to decrease their size from ~95kb to 5kb and converted the images to AVIF, both of which made for big speed-ups.</p>
       <h2>I have made no mistakes and nothing can be improved</h2>
