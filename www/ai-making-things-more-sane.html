@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" name="Content-Type">
+    <link rel="icon" href="headshot.jpg" type="image/jpeg">
+    <title>AI's making things more sane?!</title>
+    <link rel="preload" href="styles.css" as="style">
+    <link
+      rel="preload"
+      href="fonts/Poppins-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link
+      rel="preload"
+      href="fonts/Poppins-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link rel="stylesheet" href="roc-default.css">
+    <link rel="stylesheet" href="styles.css">
+    <script
+      data-goatcounter="https://isaacvando.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+    <meta name="description" content="AI is causing teams to adopt the engineering practices that have been right all along">
+    <meta name="author" content="Isaac Van Doren">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://isaacvando.com/ai-making-things-more-sane">
+    <meta property="og:title" content="AI's making things more sane?!">
+    <meta property="og:description" content="AI is causing teams to adopt the engineering practices that have been right all along">
+  </head>
+  <body>
+    <div id="main-content">
+      <header>
+        <h1>AI's making things
+          <em>more</em>
+          sane?!</h1>
+        <div>
+          <div>Isaac Van Doren</div>
+          <div>2026-02-17</div>
+        </div>
+      </header>
+      <p>I never thought I'd say this, but AI is genuinely making some parts of software engineering
+        <em>more</em>
+        sane. Yes, it's turning plenty of things completely bonkers, but I don't need to tell you that: you've already heard plenty of hype and waded through plenty of slop. I keep noticing this phenomenon where people say &quot;Now that AI's here we should start doing X&quot; where X is the thing we should have been doing all along. With that, here's a list of some instances of this phenomenon I've observed.</p>
+      <h2>Tests are a central part of your job now</h2>
+      <p>If they weren't before AI, they probably should have been!</p>
+      <h2>You don't need so many dependencies anymore, just vibe them</h2>
+      <p>Every dependency has a cost and that cost is much higher than most engineers realize. A modern-day Sisyphus might be tasked with keeping his dependencies up to date rather than pushing a boulder. Vendoring (copying third party code into source control) is a great solution to the infinite slog of dependency management.
+        <em>Supply chain attacks?</em>
+        Nope!
+        <em>Maintainer won't accept your patch?</em>
+        You are the maintainer!
+        <em>Can't build when your package manager is down?</em>
+        What's a package manager?
+        <em>You only use 5% of the package?</em>
+        Delete the rest!</p>
+      <p>While I was working on the backend for
+        <a href="https://softwareshould.work">Software Should Work</a>
+        I needed to validate some Stripe webhooks. I thought to myself &quot;hmm, I sure don't want to get this wrong, maybe I should find an SDK&quot;. So I looked at
+        <a href="https://github.com/arlyon/async-stripe">async-stripe</a>, which seems like a perfectly good library, but by nature is large. Instead, I copied the webhook validation logic out of async-stripe and after paring it down was left with 50 lines of straightforward Rust code and no dependency. Much better!</p>
+      <p>If there isn't a good dependency to copy, often times it's not at all difficult to build one yourself. We just like thinking things are too hard. Building something yourself feels a lot less intimidating when you have AI to help, but that doesn't mean you couldn't have done it without AI!</p>
+      <h2>Easy-to-spin-up development environments are crucial</h2>
+      <p>Have you ever talked to a Nix user? I assure you, they were excited about it long before the AI boom.</p>
+      <h2>A small number of engineers can build a shocking amount</h2>
+      <p><a href="https://charity.wtf/2022/10/03/every-achievement-has-a-denominator/">Every achievement has a denominator</a>, and there are plenty of astonishing pre-AI achievements with very small denominators. Three people built SQLite, the database
+        <a href="https://sqlite.org/mostdeployed.html">deployed a trillion times</a>. Daniel Stenberg has been the driving force behind cURL for 25+ years. Even among projects with many active (paid!) contributors, often a small group is responsible for most of the value. AI didn't change this fact.</p>
+      <h2>You must have fast builds</h2>
+      <p>Humans like these too.</p>
+      <h2>Your release process is holding up your engineers</h2>
+      <p>I'm willing to bet that at least 90% of engineering teams could deliver more value, more quickly, with a lighter release process. This was true before AI and will continue to be true; nothing revolutionary here.</p>
+      <h2>Explicitness is a must</h2>
+      <p>Instead of writing a macro or using framework magic, writing 20% more code in favor of explicitness pays huge dividends. Agents love this: they can look at the code and understand it without any fuss or special tooling. Of course humans love this too. The magic of explicitness is one of the core reasons engineers love
+        <a href="https://elm-lang.org/">Elm</a>
+        (and
+        <a href="https://roc-lang.org">Roc</a>!) so much.</p>
+      <h2>Static types are great</h2>
+      <p>Agents have an easier time understanding and modifying a codebase with static types. So do humans!</p>
+      <h2>You can use AWS directly</h2>
+      <p>Instead of paying a premium for a boutique cloud provider built on top of AWS, you can ask Claude to generate some Terraform for you and use AWS directly instead. Even if you didn't have Claude, I'm sure you could have figured it out yourself.</p>
+      <h2>In sum</h2>
+      <p>The parameters plugged into most engineering teams' cost-benefit analyses have been wrong all along. We used to believe that code was expensive and developers were incapable; now we believe that code is cheap and developers are capable. In reality, the latter was always true. Apparently we needed a god-in-a-box to come along to start believing it.</p>
+      <p>If you want software engineering to be better than it is today, join us at <a href="https://softwareshould.work">Software Should Work</a>.
+    </div>
+    <footer>
+      <p>
+        <a href="/">home</a>
+        | &copy;
+        <span id="date"></span>
+        Isaac Van
+                Doren
+      </p>
+      <script>
+        document.getElementById("date").innerHTML =
+                    new Date().getFullYear();
+      </script>
+    </footer>
+  </body>
+</html>
