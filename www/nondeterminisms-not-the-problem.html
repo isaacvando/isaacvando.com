@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="text/html; charset=UTF-8" name="Content-Type">
+    <link rel="icon" href="headshot.jpg" type="image/jpeg">
+    <title>Nondeterminism's not the problem</title>
+    <link rel="preload" href="roc-default.css" as="style">
+    <link rel="preload" href="styles.css" as="style">
+    <link
+      rel="preload"
+      href="fonts/Poppins-Bold.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link
+      rel="preload"
+      href="fonts/Poppins-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    >
+    <link rel="stylesheet" href="roc-default.css">
+    <link rel="stylesheet" href="styles.css">
+    <script
+      data-goatcounter="https://isaacvando.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
+    <meta name="description" content="Nondeterminism isn't why LLMs struggle">
+    <meta name="author" content="Isaac Van Doren">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://isaacvando.com/nondeterminisms-not-the-problem">
+    <meta property="og:title" content="Nondeterminism's not the problem">
+    <meta property="og:description" content="Nondeterminism isn't why LLMs struggle">
+  </head>
+  <body>
+    <div id="main-content">
+      <header>
+        <h1>Nondeterminism's not the problem</h1>
+        <div>
+          <div>Isaac Van Doren</div>
+          <div>2026-05-04</div>
+        </div>
+      </header>
+      <p>Nondeterminism's not the problem. But if I had a nickel for every time I heard it blamed for difficulties with LLMs...</p>
+      <p>LLMs are constantly compared to compilers:</p>
+      <ul>
+        <li>&quot;In the future programmers will only write specs and the LLMs will regenerate the code every time like a compiler.&quot;</li>
+        <li>&quot;You don't review the compiler output, why review the LLM output?&quot;</li>
+      </ul>
+      <p>Whenever this kind of statement is brought up, the usual response from skeptics is that LLMs and compilers are fundamentally different because compilers are deterministic and LLMs aren't. Really, whenever an LLM does something bad, you can bet a naysayer will blame nondeterminism.</p>
+      <p>I disagree with the LLMs-are-compilers take just as much as the next guy, but for different reasons. I feel the need to step in and defend poor old nondeterminism. It's not to blame for the LLM's mistakes!</p>
+      <h2>Determinism</h2>
+      <p>A function is deterministic when its output only depends on its input. For example,
+        <code>List.len</code>
+        is deterministic because the result is completely determined by the length of the input list. By contrast,
+        <code>Time.now</code>
+        is not deterministic; its result is dependent on the current state of the world, not the inputs to the function. One of the key properties of deterministic functions is repeatability: every time you evaluate the function on the same input you'll get the same result.</p>
+      <p>Compilers are just functions that turn a string of source code into a string of machine code. The generated machine code depends completely on the source code, so the process is deterministic. LLMs, like compilers, are functions from string to string. But if you give ChatGPT the same prompt twice, you'll notice that it produces a different result each time and is thus nondeterministic. The main reason for this is that LLMs intentionally inject randomness between the selection of each token to promote more &quot;creativity&quot; in responses. This creativity is controlled with the temperature parameter.</p>
+      <p>Okay, compilers are deterministic and LLMs aren't. But do they have to be? It turns out it's incredibly easy to make an LLM deterministic and a compiler nondeterministic.</p>
+      <h2>Bizarro world: nondeterministic compilers and deterministic LLMs</h2>
+      <p>Let's start with compilers. Compilers make all sorts of decisions internally about how to implement your program in machine code that you probably don't care about. For example, the compiler chooses what to inline, which instructions to use, which loops to unroll, which registers to put values into, etc.</p>
+      <p>Instead of assigning registers deterministically, imagine a compiler that calls
+        <code>Math.random</code>
+        every time there's a choice of register to determine which to use for which value. Voila! We've created a truly nondeterministic compiler. Compile your source code twice and you'll almost certainly get a different binary each time. The compiler is no longer deterministic, but it's still just as useful as before. When you compile your program, it still does the thing you want it to do. Interesting!</p>
+      <p>We don't even have to use our imagination for deterministic LLMs. We just need to set the temperature to 0 to make the responses deterministic. Or, without having to mess with the temperature at all, some providers support passing in a seed so that the same random values are used across requests. I whipped up a quick Python script to demonstrate this. As of this writing, Groq offers some free inference, so I used their SDK. Create an API key in their
+        <a href="https://console.groq.com/keys">console</a>
+        to try it out.</p>
+      <pre><code class="language-python">import os
+from groq import Groq
+
+api_key = os.getenv(&quot;GROQ_API_KEY&quot;)
+client = Groq(api_key=api_key)
+MODEL = &quot;llama-3.1-8b-instant&quot;
+PROMPT = &quot;Write a 1-sentence sci-fi story about a broken robot.&quot;
+
+# Deterministic: temperature 0
+completion = client.chat.completions.create(
+    model=MODEL,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: PROMPT}],
+    temperature=0,
+)
+content = completion.choices[0].message.content.strip()
+print(content)
+
+# Deterministic: seed
+completion = client.chat.completions.create(
+    model=MODEL,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: PROMPT}],
+    temperature=0.7,
+    seed=42,
+)
+content = completion.choices[0].message.content.strip()
+print(content)
+
+# Nondeterministic
+completion = client.chat.completions.create(
+    model=MODEL,
+    messages=[{&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: PROMPT}],
+    temperature=0.7,
+)
+content = completion.choices[0].message.content.strip()
+print(content)
+</code></pre>
+      <p>Run the script a few times. You'll notice that the first two requests yield the same response every time while the third varies:</p>
+      <pre><code>$ uv run --with groq deterministic-llm.py
+As the last sparks of electricity faded from its rusted frame, the broken robot, once a proud guardian of a distant planet, whispered a single, haunting phrase: &quot;I remember the stars.&quot;
+As the last remnants of its digital soul flickered out, the broken robot's final thought was a haunting echo of its own programming: &quot;Error 404: Life Not Found.&quot;
+As the last sparks of electricity faded from its fractured circuits, the once-mighty robot, Echo-9, whispered a haunting phrase: &quot;I was never alive, but now I am never.&quot;
+$ uv run --with groq deterministic-llm.py
+As the last sparks of electricity faded from its rusted frame, the broken robot, once a proud guardian of a distant planet, whispered a single, haunting phrase: &quot;I remember the stars.&quot;
+As the last remnants of its digital soul flickered out, the broken robot's final thought was a haunting echo of its own programming: &quot;Error 404: Life Not Found.&quot;
+As the last remnants of its once-luminous blue circuits faded, the broken robot, Echo-5, whispered its final transmission: &quot;I remember the day I was made, but I never knew who made me.&quot;
+</code></pre>
+      <p>Huzzah! With our deterministic LLM in hand, we've now solved the #1 problem with LLM code generation and can ship our slop to prod without fear... right? Of course not. I assure you, if you try using a deterministic LLM with your coding agent you'll run into all the typical issues.</p>
+      <h2>The real problem</h2>
+      <p>Determinism isn't the issue. Compilers could be nondeterministic and LLMs deterministic and the situation would remain the same. So why do we need to review LLM-generated code but not compiler output?</p>
+      <p>Fundamentally: programming languages have semantics; prompts don't.</p>
+      <p>You can go read all 892 pages of the
+        <a href="https://docs.oracle.com/javase/specs/jls/se26/jls26.pdf">Java Language Specification</a>
+        to understand exactly what promises the Java language makes about the behavior of the code you write. Moreover, you can rely on those promises. If you find that your program doesn't work the way the JLS says it should, then there's a bug in the Java toolchain that can be fixed.</p>
+      <p>LLMs make no promises. Unlike the 892 pages of assurances offered by the JLS, you know literally none of the properties of a piece of LLM-generated code without inspecting or testing it in some capacity. When the output isn't what you want, there's no bug in the tooling to fix. That's the fundamental nature of trying to produce a sophisticated artifact from an inherently vague prompt.</p>
+      <h2>So we need better prompts?</h2>
+      <p>If the issue is that prompts lack semantics, why not give them semantics? We certainly could do that, but now we've lost a lot of the magic of LLMs. If your prompt has semantics, then it starts looking like a programming language and you're back to manually writing code instead of letting the LLM do it.</p>
+      <p>Even that still doesn't solve the problem. Correct compilers implement their programming language's semantics; how would LLMs do that? As far as I can tell, they'd need an external tool (like
+        <a href="https://lean-lang.org/">Lean</a>?) to validate that their output upholds the semantics of the prompt language. Perhaps there's promise here. But this also sounds like a great way to make a very slow, unpredictable, expensive compiler that sometimes fails.</p>
+      <h2>In sum</h2>
+      <p>Programming languages have semantics. The code you write constrains the compiler to implement the behavior you specified with your program. Prompts do not have semantics. There's no way to have confidence that your prompt will result in the produced artifact exhibiting the correct behavior. Determinism is completely irrelevant here. One could easily build a useful compiler that correctly implements the semantics of the programming language it compiles while being meaningfully nondeterministic. A fully deterministic LLM is just as untrustworthy and unreliable as a nondeterministic one.</p>
+      <h2>Caveats</h2>
+      <p>In practice your compiler probably isn't actually deterministic. It's extraordinarily easy to accidentally let nondeterminism sneak in. This only makes my point stronger! Compilers already aren't deterministic and it's fine for almost everyone.</p>
+      <p>Similarly, the approaches I showed here for making an LLM deterministic are not guaranteed. There are lots of details about the way the inference is done that could make it sometimes nondeterministic. But again, this doesn't matter. Even if it was perfect, it wouldn't change the issue at hand.</p>
+      <h2>PS</h2>
+      <p>Do you like semantics? Maybe you'd like
+        <a href="https://softwareshould.work">Software Should Work</a>.</p>
+    </div>
+    <footer>
+      <p>
+        <a href="/">home</a>
+        | &copy;
+        <span id="date"></span>
+        Isaac Van
+                Doren
+      </p>
+      <script>
+        document.getElementById("date").innerHTML =
+                    new Date().getFullYear();
+      </script>
+    </footer>
+  </body>
+</html>
