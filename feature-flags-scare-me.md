@@ -2,7 +2,7 @@
 
 Fear Uncertainty & Doubt is all the rage these days so I thought I'd try my hand at it. Feature flags scare me, and they should scare you too. They promise safety and speed but all too often end up delivering complexity and wasted effort instead.
 
-I have feature flags services like [LaunchDarkly](https://launchdarkly.com/) in mind here. They allow you to add flags to your code that can be controlled remotely from their console to change the behavior of your program at runtime. This is usually used to toggle wrapped features for certain groups of users, but really is just a convenient way to inject remote state into your program.
+I'm thinking of feature flag services like [LaunchDarkly](https://launchdarkly.com/) here. They allow you to add flags to your code that can be controlled remotely from their console to change the behavior of your program at runtime. This is usually used to toggle wrapped features for certain groups of users, but really is just a convenient way to inject remote state into your program.
 
 ```
 if (featureFlags.myNewFeature()) {
@@ -18,9 +18,26 @@ This is legitimately great when it works. But it doesn't always work, and even w
 
 ## Risk
 
-Every time you deploy you take a risk. Developing an intuition for how much risk you're taking with a deploy is a very valuable skill for engineers. When your hackles raise at the thought of deploying the change you just made, you know it's time to spend extra effort making sure it's correct. When I make a stomach-turning change to a complex system, a feature flag can usually do very little to make me feel better about it.
+Every time you deploy you take a risk. Developing an intuition for how much risk any given deploy carries is a very valuable skill for engineers. When your hackles raise at the thought of deploying a change, you know it's time to spend extra effort making sure it's correct. When I make a stomach-turning change to a complex system, a feature flag can usually do very little to make me feel better about it.
 
-So, why doesn't including a feature flag make me feel better?
+Why doesn't including a feature flag make me feel better?
+Feature flags increase complexity which decreases understanding
+Feature flags are hard to implement correctly
+Other issues:
+- Dependency on third party
+- Extra tasks
+
+They don't actually remove the risk of deploying a new change (just becuase you might have done it wrong?)
+  - No, fundamentally you are still deploying a new piece of software?
+Complexity (therefore hard to implement?)
+Cost (dependency, clean up)
+
+Gripes with feature flags:
+- They increase complexity
+- They're hard to implement correctly
+- They create a major dependency on a third party service
+- They don't actually decouple release and deployment
+- They create more work
 
 ## "Decouple deployment from release"
 
@@ -46,15 +63,21 @@ Of course this bug was my fault; I could have thought harder about the change an
 
 To make matters worse, feature flags are instant tech-debt. Removing a flag is a pure clean-up task without a direct value-add like creating a new feature. Tasks like these tend to languish at the bottom of the backlog for far too long. This delay extends the time window where the codebase must support the complexity of the new and old implementations and where a changed flag value can cause a bug. Even if the flag is cleaned up quickly, it's still a task that an engineer must spend time on.
 
-## Defaults/Dependencies
+## Defaults & Dependencies
 
-What happens when LaunchDarkly goes down? Now your system has to fallback
+What happens when LaunchDarkly goes down? Your system has to use a default fallback value every time a flag is evaluated. This means the proper functioning of your system is completely dependent on a third-party service being available. This is a major dependency to accept, and one that I suspect is rarely considered when third-party feature flag services are chosen.
 
-Why I don't like feature flags
-- Too much code to clean up
-- Introduces extra state into your program
-- Managing extra state can become surprisingly difficult, especially when you have multiple flags interacting at once
-- Every time you deploy you take a risk. Developing an intuition for how much risk you're taking with any given deploy is a very valuable skill for engineers to have. When your stomach gets knotted thinking about deploying the change you just made, you know it's time to spend extra effort making sure the change is correct. When I make a stomach-turning kind of change to a complex system, a feature flag can usually do very little to make me feel better about it.
+The main way I see to properly this risk (if you must use one of these services) is to design your system in a way that can tolerate the value of any feature flag being changed at any time without warning. I suspect almost no one using these services actually does this. It's very common to use a feature flag as a one way switch: it's off until we release the new feature that we cannot safely disable.
 
-- You can't _actually_ decouple release and deploy; you just release a new version of your software that has more configuration than it otherwise would.
--
+## What then?
+
+I recommend keeping use of feature flags to a minimum. A common pitch for feature flags is that they allow teams to work on features even if services their dependencies are not ready yet. Change the code behind a flag and only release it once everything is ready. This kind of thing can usually be done very easily without introducing a flag; just build the code out in a way that keeps most of it naturally hidden until you slot in the final piece to activate it.
+
+Avoiding feature flags lowers complexity which in turn increases understanding, they key ingredient in safely changing a complex system. If a change is high risk, adding a feature flag might really just make it riskier. If a change is low risk, then why do you need a flag anyway?
+
+Instead of
+
+
+
+Notes:
+FE flags seem easier than BE flags
