@@ -14,18 +14,8 @@ The vibes were just right. We could agree that software is often broken _and_ th
 
 Two days after the conference, Andrew Kelley opened an [issue](https://codeberg.org/ziglang/zig/issues/36237) on the Zig repo to add support for a Fil-C inspired compilation mode. Andrew was right there in the audience during Fil's (incredible) talk on Fil-C. It's easy to think abstractly that organizing a conference will "promote innovation" or something, but wow; to think that SSW might play a tiny role such an epic feature being added to a major programming language?! 
 
-![](ssw/zig_fil_c.png)
+![](ssw/zig-fil-c.png)
 
-A core reason that the event worked is that we had such high-quality attendees. You couldn't walk three steps without bumping into someone working on something interesting who might as well have been a speaker. It seemed like everyone there completely _got_ the premise of the conference: "Yeah, software _should_ work!".
 
-![](ssw/delaney_demo.png)
 
-Throughout the organizing process, many people asked me "Why are you hosting this event in Columbia, Missouri?!". The simple answer is that I live here. However, this choice of location turned out to be a feature, not a bug. Because Columbia isn't a major hub, it acted as a natural filter: the people who showed up were the ones that _really_ wanted to be there. 
 
-Fortunately Columbia is also an excellent setting for a conference. You can't go wrong with so many great [restaurants](https://softwareshould.work/#isaacs-food-guide), coffee shops, and bars within a short walk of the venue. Plus the trail system, plus Mizzou's campus, plus all the art, etc.
-
-![](ssw/andrew_kelley_frog.png)
-
-One attendee named Grigoris came all the way from Greece! He had some spare time before flying back, so he and my dad ended up going sailing.
-
-![](ssw/grigoris_sailing.png)
