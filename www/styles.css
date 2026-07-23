@@ -95,6 +95,15 @@ hr {
     max-width: var(--width-content);
 }
 
+#main-content img[src^="ssw/"] {
+    display: block;
+    max-width: 100%;
+    max-height: 75vh;
+    width: auto;
+    height: auto;
+    margin: 1.5rem auto;
+}
+
 #social-icons {
     margin: 10px 0;
 }
